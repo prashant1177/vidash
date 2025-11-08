@@ -25,14 +25,22 @@ import ToDoList from "./components/ToDoList";
 import DailyQuote from "./components/DailyQuote";
 import Scedule from "./components/Scedule";
 import Calender from "./components/Calender";
+import Upcoming from "./components/Upcoming";
 
 const WorkHorseDashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [lateMessage, setLateMessage] = useState("");
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showScedule, setShowScedule] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    if (localStorage.getItem("user")) {
+      const tem =localStorage.getItem("user")
+      setUser(JSON.parse(tem));
+    } else {
+      window.location.href = "/login";
+    }
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -40,14 +48,17 @@ const WorkHorseDashboard = () => {
   return (
     <div className="min-h-screen bg-black text-white font-sans p-6">
       {/* Scedule */}
-      {showScedule ? <Calender setShowScedule={setShowScedule}/> : null}
+      {showScedule ? <Calender setShowScedule={setShowScedule} /> : null}
       {/* Main Dashboard */}
       <div className="bg-neutral-950 rounded-xl p-8 mb-6 shadow-2xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-light uppercase tracking-wider"></h1>
           <div className="flex items-center gap-6">
-            <button onClick={()=> setShowScedule(!showScedule)} className="bg-orange-500 px-4 py-2 rounded-lg font-light hover:bg-[#00D4BC] transition-all">
+            <button
+              onClick={() => setShowScedule(!showScedule)}
+              className="bg-orange-500 px-4 py-2 rounded-lg font-light hover:bg-[#00D4BC] transition-all"
+            >
               {showScedule ? "Close Scedule" : "Open Scedule"}
             </button>
             <div className="flex items-center gap-2">
@@ -62,8 +73,8 @@ const WorkHorseDashboard = () => {
                 {currentTime.toLocaleDateString()}
               </span>
             </div>
-            <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-[#1E1F3A] font-light">
-              U
+            <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-light">
+              {user ? user.name?.[0]?.toUpperCase() : "NA"}
             </div>
           </div>
         </div>
@@ -77,8 +88,9 @@ const WorkHorseDashboard = () => {
 
         {/* Streak and Personality Section Inside Dashboard */}
         <div className="grid grid-cols-3 gap-8 mt-8">
-          {/* Streak Section */}
-          <SelectRole />
+          {/* Streak Section 
+          <SelectRole />*/}
+          <Upcoming />
           {/* Timer Section */}
           <TimerSection />
           {/* Streak Section */}

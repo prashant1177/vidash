@@ -16,7 +16,7 @@ router.post("/signup", async (req, res) => {
   console.log(data.user);
 
   if (error) return res.status(400).json({ error: error.message });
-  res.json({ user: data.user });
+  res.status(200).json({ user: data.user });
 });
 
 // Sign In
@@ -28,33 +28,70 @@ router.post("/signin", async (req, res) => {
   });
 
   if (error) return res.status(400).json({ error: error.message });
-  console.log("Login succesful" , data.user);
-  res.json({
-    user: data.user,
-    session: data.session,
-    access_token: data.session?.access_token,
-    refresh_token: data.session?.refresh_token,
+   // Store tokens in secure cookies
+  res.cookie("access_token", data.session?.access_token, {
+    httpOnly: true,
+    secure: true, // HTTPS only
+    sameSite: "Strict",
+    maxAge: 60 * 60 * 1000, // 1 hour
+  });
+
+  res.cookie("refresh_token", data.session?.refresh_token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+    maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days
+  });
+  res.status(200).json({
+    user: data.user.user_metadata,
   });
 });
 
 // REFRESH TOKEN
 router.post("/refresh", async (req, res) => {
-  const { refresh_token } = req.body;
+  const refresh_token = req.cookies.refresh_token;
+  if (!refresh_token) return res.status(401).json({ error: "No refresh token" });
+
   const { data, error } = await supabase.auth.refreshSession({ refresh_token });
+  if (error) return res.status(401).json({ error: error.message });
 
-  if (error) return res.status(400).json({ error: error.message });
-
-  res.status(200).json({
-    access_token: data.session.access_token,
-    refresh_token: data.session.refresh_token,
+  res.cookie("access_token", data.session.access_token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+    maxAge: 60 * 60 * 1000,
   });
+
+  res.json({ message: "Session refreshed" });
 });
 
-// Sign Out
 router.post("/signout", async (req, res) => {
-  const { error } = await supabase.auth.signOut();
-  if (error) return res.status(400).json({ error: error.message });
-  res.json({ message: "Signed out successfully" });
+  try {
+    // Step 1: get the token from cookies (optional if you're tracking user sessions)
+    const token = req.cookies?.access_token;
+
+    // Step 2: Sign out user from Supabase (invalidates the refresh token)
+    const { error } = await supabase.auth.signOut();
+
+    if (error) return res.status(400).json({ error: error.message });
+
+    // Step 3: Remove cookies from browser
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+    res.clearCookie("refresh_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+
+    // Step 4: Respond success
+    res.status(200).json({ message: "Signed out successfully." });
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong during signout." });
+  }
 });
 
 module.exports = router;

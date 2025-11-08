@@ -3,13 +3,19 @@ import { useState } from "react";
 export default function TaskInput({ onAdd }) {
   const [task, setTask] = useState({
     title: "",
+    description: "",
     start: "",
-    end: ""
+    end: "",
+    color: "bg-neutral-800/30",
+    all_day: false,
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTask((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setTask((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -22,8 +28,9 @@ export default function TaskInput({ onAdd }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-neutral-900 px-4 pt-8 w-full mb-4 h-full "
+      className="flex flex-col gap-3 bg-neutral-900 px-4 pt-8 w-full mb-4 h-full rounded-lg"
     >
+      {/* Title */}
       <label className="text-sm text-gray-300">Title</label>
       <input
         name="title"
@@ -33,6 +40,18 @@ export default function TaskInput({ onAdd }) {
         className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
       />
 
+      {/* Description */}
+      <label className="text-sm text-gray-300">Description</label>
+      <textarea
+        name="description"
+        value={task.description}
+        onChange={handleChange}
+        placeholder="Add a note about this task..."
+        rows={3}
+        className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none resize-none"
+      />
+
+      {/* Start & End Times */}
       <div className="flex gap-3">
         <div className="flex flex-col flex-1">
           <label className="text-sm text-gray-300">Start</label>
@@ -57,9 +76,40 @@ export default function TaskInput({ onAdd }) {
         </div>
       </div>
 
+      {/* All Day Toggle */}
+      <div className="flex items-center gap-2 mt-2">
+        <input
+          type="checkbox"
+          name="all_day"
+          checked={task.all_day}
+          onChange={handleChange}
+          className="accent-orange-500 cursor-pointer"
+        />
+        <label className="text-sm text-gray-300">All Day</label>
+      </div>
+
+      {/* Color */}
+      <div className="flex flex-col mt-2">
+        <label className="text-sm text-gray-300">Event Color</label>
+        <select
+          name="color"
+          value={task.color}
+          onChange={handleChange}
+          className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
+        >
+          <option value="bg-neutral-800/30">Default</option>
+          <option value="bg-orange-500/40">Orange</option>
+          <option value="bg-green-500/40">Green</option>
+          <option value="bg-blue-500/40">Blue</option>
+          <option value="bg-purple-500/40">Purple</option>
+          <option value="bg-pink-500/40">Pink</option>
+        </select>
+      </div>
+
+      {/* Submit */}
       <button
         type="submit"
-        className="mt-3 bg-gray-700 hover:bg-gray-600 text-sm py-2 rounded-md"
+        className="mt-4 bg-orange-500/80 hover:bg-orange-500 text-sm py-2 rounded-md transition-colors"
       >
         Add Task
       </button>

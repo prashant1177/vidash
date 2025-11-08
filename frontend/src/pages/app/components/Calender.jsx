@@ -37,11 +37,12 @@ export default function Calender({ setShowScedule }) {
   };
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center  z-30 backdrop-blur-sm bg-black/10">
-      <div className="grid grid-cols-3  h-[600px] w-5xl rounded-2xl overflow-hidden ">
+      <div className="grid grid-cols-3  h-[600px] w-5xl rounded-2xl overflow-hidden bg-black">
         <div className="col-span-1">
           <TaskInput onAdd={onAdd} />
         </div>
         <div className="col-span-2">
+          <h1 className="font-light text-xl text-center my-2">Todays Scedule</h1>
           <Scedule sceduled={sceduled} />
         </div>
       </div>

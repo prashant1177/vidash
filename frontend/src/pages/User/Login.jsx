@@ -8,13 +8,18 @@ export default function Login() {
   const [password, setPassword] = useState(null);
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const handleLogin = async () => {
-    console.log(`clicked`);
-    if (email && password) {
+    try {
       const res = await axiosClient.post(`/auth/signin`, {
         email,
         password,
       });
-      console.log(res.data);
+      if (res.status === 200) {
+        const {user } = res.data;
+        localStorage.setItem("user", JSON.stringify(user));
+        window.location.href = "/app";
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
   return (
