@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function LockYourself() {
   return (
     <section className="relative flex flex-col items-center justify-center text-center bg-black text-white py-32 px-6 overflow-hidden">
@@ -16,10 +18,10 @@ export default function LockYourself() {
           into habit and habit into results.
         </p>
 
-        <div className="mt-10">
-          <button className="bg-neutral-900 border border-gray-700 px-8 py-3 rounded-full text-white hover:bg-neutral-800 hover:border-gray-500 transition-all duration-200">
+        <div className="mt-12">
+          <Link to={`/register`} className="bg-neutral-900 border border-gray-700 px-8 py-3 rounded-full text-white hover:bg-neutral-800 hover:border-gray-500 transition-all duration-200">
             Commit Now
-          </button>
+          </Link>
         </div>
       </div>
 

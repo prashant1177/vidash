@@ -24,7 +24,7 @@ export default function Hero() {
           Follow a professional schedule for your solo projects — plan, track,
           and execute your work with structure and clarity.
         </p>
-        <Link to={`/app`} className="z-10 mt-10 bg-orange-500 hover:bg-orange-600 transition-all duration-200 px-8 py-3 text-lg font-medium rounded-full shadow-lg">
+        <Link to={`/register`} className="z-10 mt-10 bg-orange-500 hover:bg-orange-600 transition-all duration-200 px-8 py-3 text-lg font-medium rounded-full shadow-lg">
           Get Started Now
         </Link>
       </div>
