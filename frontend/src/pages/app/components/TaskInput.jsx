@@ -1,14 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TaskInput({ onAdd }) {
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const getNextHour = () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const today = new Date().toISOString().split("T")[0];
+
   const [task, setTask] = useState({
     title: "",
     description: "",
-    start: "",
-    end: "",
+    date: today,
+    start: getCurrentTime(),
+    end: getNextHour(),
     color: "bg-neutral-800/30",
     all_day: false,
   });
+
+  useEffect(() => {
+    // Update times on mount so they're always current
+    setTask((prev) => ({
+      ...prev,
+      start: getCurrentTime(),
+      end: getNextHour(),
+    }));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -22,7 +49,15 @@ export default function TaskInput({ onAdd }) {
     e.preventDefault();
     if (!task.title || !task.start || !task.end) return;
     onAdd(task);
-    setTask({ title: "", start: "", end: "" });
+    setTask({
+      title: "",
+      description: "",
+      date: today,
+      start: getCurrentTime(),
+      end: getNextHour(),
+      color: "bg-neutral-800/30",
+      all_day: false,
+    });
   };
 
   return (
@@ -49,6 +84,16 @@ export default function TaskInput({ onAdd }) {
         placeholder="Add a note about this task..."
         rows={3}
         className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none resize-none"
+      />
+
+      {/* Date Picker */}
+      <label className="text-sm text-gray-300">Date</label>
+      <input
+        type="date"
+        name="date"
+        value={task.date}
+        onChange={handleChange}
+        className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
       />
 
       {/* Start & End Times */}

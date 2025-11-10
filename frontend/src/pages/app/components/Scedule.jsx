@@ -3,9 +3,7 @@
 export default function Scedule( {sceduled}) {
   return (
 
-    <div className="w-full grid space-y-1 h-screen border-l border-neutral-700 overflow-y-scroll  bg-neutral-950 py-8 px-4 ">
-     
-      
+    <div className="w-full grid space-y-1 bg-neutral-950 py-8 px-4 "> 
       {sceduled.map((data, i) => (
         <div key={i} className="h-20 flex items-center pl-2 gap-2">
           <span className=" text-xs text-neutral-400">{data.time}</span>
