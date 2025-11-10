@@ -53,7 +53,7 @@ const WorkHorseDashboard = () => {
       <div className="bg-neutral-950 rounded-xl p-8 mb-6 shadow-2xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-light uppercase tracking-wider"></h1>
+          <h1 className="text-3xl font-light uppercase tracking-wider">Title Here</h1>
           <div className="flex items-center gap-6">
             <button
               onClick={() => setShowScedule(!showScedule)}
