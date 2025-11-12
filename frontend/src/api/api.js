@@ -7,44 +7,26 @@ const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // crucial for cookies
 });
 
-// Attach token before each request
-axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-// Automatically refresh token if access expires
+// Simplified: rely on backend cookies, not localStorage tokens
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Prevent infinite retry loop
+    // if token expired, try refresh endpoint
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
-      const refresh_token = localStorage.getItem("refresh_token");
-      if (refresh_token) {
-        try {
-          const res = await axios.post(`${API_URL}/auth/refresh`, {
-            refresh_token,
-          });
-
-          const { access_token, refresh_token } = res.data;
-          localStorage.setItem("access_token", access_token);
-          localStorage.setItem("refresh_token", refresh_token);
-
-          originalRequest.headers.Authorization = `Bearer ${access_token}`;
-          return axiosClient(originalRequest); // Retry with new token
-        } catch (refreshError) {
-          console.error("Token refresh failed:", refreshError);
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          // optional: redirect to login
-        }
+      try {
+        // refresh token handled via cookie
+        await axiosClient.post("/api/auth/refresh");
+        // retry original request
+        return axiosClient(originalRequest);
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        // optional: redirect to login page
       }
     }
 

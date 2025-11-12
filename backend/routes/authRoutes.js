@@ -28,18 +28,18 @@ router.post("/signin", async (req, res) => {
   });
 
   if (error) return res.status(400).json({ error: error.message });
-   // Store tokens in secure cookies
+  // Store tokens in secure cookies
   res.cookie("access_token", data.session?.access_token, {
     httpOnly: true,
-    secure: true, // HTTPS only
-    sameSite: "Strict",
+  secure: false,        // 👈 no SSL
+  sameSite: "Lax",      // works fine between localhost ports
     maxAge: 60 * 60 * 1000, // 1 hour
   });
 
   res.cookie("refresh_token", data.session?.refresh_token, {
     httpOnly: true,
-    secure: true,
-    sameSite: "Strict",
+  secure: false,        // 👈 no SSL
+  sameSite: "Lax",      // works fine between localhost ports
     maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days
   });
   res.status(200).json({
@@ -50,15 +50,16 @@ router.post("/signin", async (req, res) => {
 // REFRESH TOKEN
 router.post("/refresh", async (req, res) => {
   const refresh_token = req.cookies.refresh_token;
-  if (!refresh_token) return res.status(401).json({ error: "No refresh token" });
+  if (!refresh_token)
+    return res.status(401).json({ error: "No refresh token" });
 
   const { data, error } = await supabase.auth.refreshSession({ refresh_token });
   if (error) return res.status(401).json({ error: error.message });
 
   res.cookie("access_token", data.session.access_token, {
     httpOnly: true,
-    secure: true,
-    sameSite: "Strict",
+  secure: false,        // 👈 no SSL
+  sameSite: "Lax",      // works fine between localhost ports
     maxAge: 60 * 60 * 1000,
   });
 
@@ -78,13 +79,13 @@ router.post("/signout", async (req, res) => {
     // Step 3: Remove cookies from browser
     res.clearCookie("access_token", {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
+  secure: false,        // 👈 no SSL
+  sameSite: "Lax",      // works fine between localhost ports
     });
     res.clearCookie("refresh_token", {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
+  secure: false,        // 👈 no SSL
+  sameSite: "Lax",      // works fine between localhost ports
     });
 
     // Step 4: Respond success

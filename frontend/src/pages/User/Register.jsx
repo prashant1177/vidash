@@ -13,11 +13,15 @@ export default function Register() {
   const handleRegister = async () => {
     console.log(`clicked`);
     if (email && password && name) {
-      const res = await axiosClient.post(`/auth/signup`, {
-        name,
-        email,
-        password,
-      });
+      const res = await axiosClient.post(
+        `/api/auth/signup`,
+        {
+          name,
+          email,
+          password,
+        },
+        
+      );
       console.log(res.data);
     }
   };

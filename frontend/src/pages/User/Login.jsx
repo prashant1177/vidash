@@ -9,7 +9,7 @@ export default function Login() {
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const handleLogin = async () => {
     try {
-      const res = await axiosClient.post(`/auth/signin`, {
+      const res = await axiosClient.post(`/api/auth/signin`, {
         email,
         password,
       });

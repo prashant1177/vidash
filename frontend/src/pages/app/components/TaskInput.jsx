@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-
+import axiosClient from "../../../api/api";
+const timeOptions = [];
+for (let h = 0; h < 24; h++) {
+  for (let m = 0; m < 60; m += 15) {
+    const hour = String(h).padStart(2, "0");
+    const minute = String(m).padStart(2, "0");
+    timeOptions.push(`${hour}:${minute}`);
+  }
+}
 export default function TaskInput({ onAdd }) {
   const getCurrentTime = () => {
     const now = new Date();
@@ -22,10 +30,10 @@ export default function TaskInput({ onAdd }) {
     title: "",
     description: "",
     date: today,
-    start: getCurrentTime(),
-    end: getNextHour(),
-    color: "bg-neutral-800/30",
-    all_day: false,
+    startTime: getCurrentTime(),
+    endTime: getNextHour(),
+    color: "orange",
+    allDay: false,
   });
 
   useEffect(() => {
@@ -49,14 +57,16 @@ export default function TaskInput({ onAdd }) {
     e.preventDefault();
     if (!task.title || !task.start || !task.end) return;
     onAdd(task);
+    const res = axiosClient.post("/api/schedule", task);
+    console.log(res.data);
     setTask({
       title: "",
       description: "",
       date: today,
-      start: getCurrentTime(),
-      end: getNextHour(),
-      color: "bg-neutral-800/30",
-      all_day: false,
+      startTime: getCurrentTime(),
+      endTime: getNextHour(),
+      color: "orange",
+      allDay: false,
     });
   };
 
@@ -100,24 +110,34 @@ export default function TaskInput({ onAdd }) {
       <div className="flex gap-3">
         <div className="flex flex-col flex-1">
           <label className="text-sm text-gray-300">Start</label>
-          <input
-            name="start"
-            type="time"
-            value={task.start}
-            onChange={handleChange}
-            className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
-          />
+             <select
+      name="startTime"
+      value={task.startTime}
+      onChange={handleChange}
+      className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+    >
+      {timeOptions.map((time) => (
+        <option key={time} value={time}>
+          {time}
+        </option>
+      ))}
+    </select>
         </div>
 
         <div className="flex flex-col flex-1">
           <label className="text-sm text-gray-300">End</label>
-          <input
-            name="end"
-            type="time"
-            value={task.end}
-            onChange={handleChange}
-            className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
-          />
+           <select
+      name="endTime"
+      value={task.endTime}
+      onChange={handleChange}
+      className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+    >
+      {timeOptions.map((time) => (
+        <option key={time} value={time}>
+          {time}
+        </option>
+      ))}
+    </select>
         </div>
       </div>
 
@@ -125,8 +145,8 @@ export default function TaskInput({ onAdd }) {
       <div className="flex items-center gap-2 mt-2">
         <input
           type="checkbox"
-          name="all_day"
-          checked={task.all_day}
+          name="allDay"
+          checked={task.allDay}
           onChange={handleChange}
           className="accent-orange-500 cursor-pointer"
         />
@@ -142,12 +162,11 @@ export default function TaskInput({ onAdd }) {
           onChange={handleChange}
           className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
         >
-          <option value="bg-neutral-800/30">Default</option>
-          <option value="bg-orange-500/40">Orange</option>
-          <option value="bg-green-500/40">Green</option>
-          <option value="bg-blue-500/40">Blue</option>
-          <option value="bg-purple-500/40">Purple</option>
-          <option value="bg-pink-500/40">Pink</option>
+          <option value="orange">Default</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+          <option value="purple">Purple</option>
+          <option value="pink">Pink</option>
         </select>
       </div>
 
