@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
         global: { headers: { Authorization: `Bearer ${token}` } },
       }
     );
-console.log("User ID after supabase client:", userId);
+    console.log("User ID after supabase client:", userId);
     const { data, error } = await supabase
       .from("Schedule")
       .insert([
@@ -55,10 +55,12 @@ console.log("User ID after supabase client:", userId);
 });
 
 // GET schedules by user ID
-router.get("/", async (req, res) => {
+router.get("/:date", async (req, res) => {
   try {
     const userId = req.user.id;
- const token = req.cookies.access_token;
+    const { date } = req.params;
+    console.log("Fetching schedules for User ID:", userId, "Date:", date);
+    const token = req.cookies.access_token;
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_KEY,
@@ -70,7 +72,8 @@ router.get("/", async (req, res) => {
       .from("Schedule")
       .select("*")
       .eq("user", userId)
-      .order("date", { ascending: true });
+      .eq("date", date)
+      .order("startTime", { ascending: true });
 
     if (error) throw error;
     res.json(data);

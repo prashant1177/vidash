@@ -6,20 +6,20 @@ export default function Scedule({ sceduled }) {
   };
   return (
     <div className="w-full grid   bg-neutral-950 py-8 px-4">
-      {sceduled.map((data, i) => (
+      {Object.entries(sceduled).map(([key, data]) => (
         <div
-          key={i}
+          key={key}
           className={` h-5 flex items-start pl-2 space-x-2 
       `}
         >
           <span
             className={`text-xs ${
-              data.time.toString().slice(3) == "00"
+              data.time.slice(3,5) == "00"
                 ? "text-neutral-400"
                 : "text-neutral-800"
             }`}
           >
-            {data.time}
+            {data.time.slice(0,5)}
           </span>
 
           {/* scheduled event goes here */}

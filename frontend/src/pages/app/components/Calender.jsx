@@ -4,18 +4,9 @@ import TaskInput from "./TaskInput";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import axiosClient from "../../../api/api";
 
-const timeColorText = Array.from({ length: 24 * 4 }, (_, i) => {
-  const hour = Math.floor(i / 4);
-  const minute = (i % 4) * 15;
-  return {
-    time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
-    color: "neutral",
-    text: "",
-  };
-});
-
 export default function Calender({ setShowScedule }) {
-  const [sceduled, setSceduled] = useState(timeColorText);
+  const [data, setdata] = useState([]);
+  const [sceduled, setSceduled] = useState({});
   const [date, setDate] = useState(new Date());
   const formatDate = (d) => d.toISOString().split("T")[0];
 
@@ -30,36 +21,89 @@ export default function Calender({ setShowScedule }) {
     // and update the sceduled state accordingly
     fetchSceduled();
     async function fetchSceduled() {
-      const res = await axiosClient.get("/api/schedule"); // Fetch from backend
-      const data = res.data; 
-      for (let item of data) {
-        onAdd(item);
-      }
+      const res = await axiosClient.get(`/api/schedule/${formatDate(date)}`); // Fetch from backend
+      const data = res.data;
+      onAdd(data);
     }
-  }, []);
+  }, [date]);
 
-  const onAdd = (value) => {
-    const updated = sceduled.map((item) => {
-      if (
-        item.time.toString().slice(0, 2) ==
-          value.startTime.toString().slice(0, 2) &&
-        item.time.toString().slice(3) == value.startTime.toString().slice(3,5)
-      ) {
+  const onAdd = (data) => {
+    let j = 0;
+    console.log("Scheduling data processing:", data);
+    const timeColorText = Array.from({ length: 24 * 4 }, (_, i) => {
+      const hour = Math.floor(i / 4);
+      const minute = (i % 4) * 15;
+      if (j < data.length) {
+      console.log(
+        data[j].startTime.slice(0, 5),
+        `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
+      );
+        if (
+          data[j].startTime.slice(0, 5) ==
+          `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
+        ) {
+          return {
+            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+              2,
+              "0"
+            )}`,
+            color: data[j].color,
+            text: data[j].title,
+          };
+        } else if (
+          data[j].startTime.slice(0, 5) <
+            `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+              2,
+              "0"
+            )}` &&
+          data[j].endTime.slice(0, 5) >
+            `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+              2,
+              "0"
+            )}`
+        ) {
+          return {
+            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+              2,
+              "0"
+            )}`,
+            color: data[j].color,
+            text: "",
+          };
+        }else if (
+          data[j].endTime.slice(0, 5) ==
+          `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
+        ) {
+          return {
+            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+              2,
+              "0"
+            )}`,
+            color: data[j++].color,
+          };
+        } else {
+          return {
+            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+              2,
+              "0"
+            )}`,
+            color: "neutral",
+            text: "",
+          };
+        }
+      } else {
         return {
-          ...item,
-          color: value.color,
-          text: value.title,
-        };
-      } else if (item.time >= value.startTime && item.time <= value.endTime) {
-        return {
-          ...item,
-          color: value.color,
+          time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+            2,
+            "0"
+          )}`,
+          color: "neutral",
+          text: "",
         };
       }
-      return item;
     });
 
-    setSceduled(updated);
+    setSceduled(timeColorText);
   };
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center  z-30 backdrop-blur-sm bg-black/10">
