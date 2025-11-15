@@ -8,7 +8,7 @@ for (let h = 0; h < 24; h++) {
     timeOptions.push(`${hour}:${minute}`);
   }
 }
-export default function TaskInput({ onAdd }) {
+export default function TaskInput() {
   const getCurrentTime = () => {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");
@@ -56,7 +56,6 @@ export default function TaskInput({ onAdd }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!task.title || !task.start || !task.end) return;
-    onAdd(task);
     const res = axiosClient.post("/api/schedule", task);
     console.log(res.data);
     setTask({
@@ -73,7 +72,7 @@ export default function TaskInput({ onAdd }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-neutral-900 px-4 pt-8 w-full mb-4 h-full rounded-lg"
+      className="flex flex-col gap-3 bg-neutral-900 px-4 py-8 w-full mb-4 h-full rounded-lg"
     >
       {/* Title */}
       <label className="text-sm text-gray-300">Title</label>

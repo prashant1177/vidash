@@ -1,33 +1,48 @@
-import React from 'react'
+import React from "react";
 import moon from "../../../../public/moon.jpg";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+// import homeImage from "../../../../public/homeImage.jpg";
+import homeImage from "../../../../public/homeImage.png";
+import homeImage1 from "../../../../public/homeImage1.png";
+import homeImage2 from "../../../../public/homeImage2.png";
+import homeImage4 from "../../../../public/homeImage4.png";
+import homeImage3 from "../../../../public/homeImage3.png";
 
 export default function Hero() {
   return (
-   <div className="h-screen  bg-black relative ">
-      {/* Background Image */}
+    <div className="h-screen  relative heroBackground overflow-hidden">
+      {/* Background Image 
       <img
         src={moon}
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover opacity-40 "
-      />
+      /> 
+      <img
+        src={homeImage}
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover opacity-90 -z-10"
+      />*/}
+      <div class="container1 inset-0  -z-10  absolute "></div>
+      <div className="bg-gradient-to-t from-black  to-transparent absolute inset-0 w-full h-full -z-10"></div>
 
-      {/* Subtle Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/20"></div>
-
-      {/* Content */}
-      <div className="flex flex-col items-center justify-center h-full text-center text-white font-sans px-6">
-        <h1 className="text-6xl font-extralight tracking-wide leading-tight drop-shadow-sm">
-          Your Space to Get Things Done
-        </h1>
-        <p className="mt-6 font-extralight text-lg italic text-gray-200 max-w-2xl leading-relaxed">
-          Follow a professional schedule for your solo projects — plan, track,
-          and execute your work with structure and clarity.
-        </p>
-        <Link to={`/register`} className="z-10 mt-10 bg-orange-500 hover:bg-orange-600 transition-all duration-200 px-8 py-3 text-lg font-medium rounded-full shadow-lg">
-          Get Started Now
-        </Link>
+      {/* Content backdrop-blur-xs  */}
+      <div className=" flex flex-col items-center justify-center h-full text-center  font-sans">
+        <div className="w-fit h-fit flex flex-col items-center justify-center px-6 py-16 rounded-2xl ">
+          <h1 className="text-neutral-50 text-6xl   font-extralight tracking-wide leading-tight drop-shadow-sm  border-b-2 border-neutral-800  cursor-grab active:cursor-grabbing  hover:backdrop-blur-xs transition duration-1000 px-6 py-4 rounded-xl">
+            Your Space to Get Things Done
+          </h1>
+          <p className="mt-6 font-extralight text-xl italic text-neutral-200 max-w-4xl leading-relaxed">
+            Follow a professional schedule for your solo projects — plan, track,
+            and execute your work with structure and clarity.
+          </p>
+          <Link
+            to={`/register`}
+            className="mt-16 bg-orange-500 text-neutral-800 border-neutral-800 hover:border-6  transition-all duration-200 px-8 py-3 text-lg font-medium rounded-full shadow-lg"
+          >
+            Get Started Now
+          </Link>
+        </div>
       </div>
     </div>
-  )
+  );
 }

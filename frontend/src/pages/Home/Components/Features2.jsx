@@ -10,7 +10,7 @@ import RegisterForm from "../../../Components/RegisterForm";
 
 export default function Features2() {
   return (
-    <div className="min-h-screen overflow-hidden  -z-20  flex justify-center sticky top-0 bg-black">
+    <div className="min-h-screen overflow-hidden bg-black  flex justify-center ">
       {/* Content */}
       <div className="flex flex-col items-center justify-center h-full  text-white font-sans px-6 mt-32">
         <h1 className="text-5xl font-extralight tracking-wide leading-tight drop-shadow-lg mb-8 text-left w-full">

@@ -2,7 +2,6 @@ import { Edit2, Eraser, History } from 'lucide-react';
 import React, { useState } from 'react'
 
 export default function NoteBook() {
-  const [scratchMode, setScratchMode] = useState("text");
   const [scratchText, setScratchText] = useState("");
   return (
     
@@ -13,26 +12,6 @@ export default function NoteBook() {
               <div className="h-0.5 w-24 bg-orange-500 mt-1"></div>
             </h2>
             <div className="flex gap-2">
-              <button
-                onClick={() => setScratchMode("text")}
-                className={`p-2 rounded ${
-                  scratchMode === "text"
-                    ? "bg-orange-500 text-white"
-                    : "text-[#F2F4F8] hover:text-orange-500"
-                }`}
-              >
-                <Edit2 className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setScratchMode("history")}
-                className={`p-2 rounded ${
-                  scratchMode === "history"
-                    ? "bg-orange-500 text-white"
-                    : "text-[#F2F4F8] hover:text-orange-500"
-                }`}
-              >
-                <History className="w-5 h-5" />
-              </button>
               <button className="p-2 text-[#F2F4F8] hover:text-orange-500">
                 <Eraser className="w-5 h-5" />
               </button>

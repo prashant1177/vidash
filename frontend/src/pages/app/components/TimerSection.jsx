@@ -8,9 +8,22 @@ export default function TimerSection() {
   const [totalWorkSeconds] = useState(1 * 60 * 60); // 8 hours
   useEffect(() => {
     let interval;
+    let start = localStorage.getItem("timerStart");
+
+    if (!start) {
+      // If timer was never started, start now
+      start = Date.now();
+      localStorage.setItem("timerStart", start);
+    } else {
+      setIsWorking(true);
+    }
+
     if (isWorking && !isOnBreak) {
       interval = setInterval(() => {
-        setWorkSeconds((prev) => prev + 1);
+        const now = Date.now();
+        setWorkSeconds(Math.floor((now - start) / 1000));
+
+        // setWorkSeconds((prev) => prev + 1);
       }, 1000);
     } else if (isOnBreak) {
       interval = setInterval(() => {
