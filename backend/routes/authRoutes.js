@@ -31,15 +31,15 @@ router.post("/signin", async (req, res) => {
   // Store tokens in secure cookies
   res.cookie("access_token", data.session?.access_token, {
     httpOnly: true,
-  secure: false,        // 👈 no SSL
-  sameSite: "Lax",      // works fine between localhost ports
+    secure: false, // 👈 no SSL
+    sameSite: "Lax", // works fine between localhost ports
     maxAge: 60 * 60 * 1000, // 1 hour
   });
 
   res.cookie("refresh_token", data.session?.refresh_token, {
     httpOnly: true,
-  secure: false,        // 👈 no SSL
-  sameSite: "Lax",      // works fine between localhost ports
+    secure: false, // 👈 no SSL
+    sameSite: "Lax", // works fine between localhost ports
     maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days
   });
   res.status(200).json({
@@ -49,21 +49,54 @@ router.post("/signin", async (req, res) => {
 
 // REFRESH TOKEN
 router.post("/refresh", async (req, res) => {
-  const refresh_token = req.cookies.refresh_token;
-  if (!refresh_token)
-    return res.status(401).json({ error: "No refresh token" });
+  try {
+    const refresh_token = req.cookies.refresh_token;
+    
+    if (!refresh_token) {
+      return res.status(401).json({ error: "No refresh token" });
+    }
+    const { data, error } = await supabase.auth.refreshSession({ 
+      refresh_token 
+    });
 
-  const { data, error } = await supabase.auth.refreshSession({ refresh_token });
-  if (error) return res.status(401).json({ error: error.message });
+    if (error) {
+      // Clear invalid cookies
+      res.clearCookie("access_token");
+      res.clearCookie("refresh_token");
+      return res.status(401).json({ error: error.message });
+    }
 
-  res.cookie("access_token", data.session.access_token, {
-    httpOnly: true,
-  secure: false,        // 👈 no SSL
-  sameSite: "Lax",      // works fine between localhost ports
-    maxAge: 60 * 60 * 1000,
-  });
+    if (!data?.session) {
+      return res.status(401).json({ error: "Failed to refresh session" });
+    }
 
-  res.json({ message: "Session refreshed" });
+    // Set new access token
+    res.cookie("access_token", data.session.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // SSL in production
+      sameSite: "Lax",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    // Update refresh token (Supabase may rotate it)
+    if (data.session.refresh_token) {
+      res.cookie("refresh_token", data.session.refresh_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+    }
+
+    res.json({ 
+      message: "Session refreshed",
+      user: data.session.user 
+    });
+
+  } catch (err) {
+    console.error("Refresh token error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 router.post("/signout", async (req, res) => {
@@ -79,13 +112,13 @@ router.post("/signout", async (req, res) => {
     // Step 3: Remove cookies from browser
     res.clearCookie("access_token", {
       httpOnly: true,
-  secure: false,        // 👈 no SSL
-  sameSite: "Lax",      // works fine between localhost ports
+      secure: false, // 👈 no SSL
+      sameSite: "Lax", // works fine between localhost ports
     });
     res.clearCookie("refresh_token", {
       httpOnly: true,
-  secure: false,        // 👈 no SSL
-  sameSite: "Lax",      // works fine between localhost ports
+      secure: false, // 👈 no SSL
+      sameSite: "Lax", // works fine between localhost ports
     });
 
     // Step 4: Respond success

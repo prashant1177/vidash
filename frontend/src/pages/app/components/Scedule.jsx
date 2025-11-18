@@ -1,19 +1,28 @@
-export default function Scedule({ sceduled }) {
+import { Trash2 } from "lucide-react";
+import axiosClient from "../../../api/api";
+
+export default function Scedule({ sceduled, setSceduled }) {
   const colorMap = {
-    red: "bg-red-500/80",
-    orange: "bg-orange-500/80",
-    blue: "bg-blue-500/80",
-    purple: "bg-purple-500/80",
-    pink: "bg-pink-500/80",
-    green: "bg-green-500/80",
+    red: "bg-red-500",
+    orange: "bg-orange-500",
+    blue: "bg-blue-500",
+    purple: "bg-purple-500",
+    pink: "bg-pink-500",
+    green: "bg-green-500",
     neutral: "bg-neutral-900",
   };
+
+  const handleDelete = async (id) => {
+    await axiosClient.delete(`/api/schedule/${id}`);
+    // Optionally, you might want to refresh the schedule list here after deletion
+    setSceduled(sceduled.filter((scedule) => scedule.id !== id));
+  };
   return (
-    <div className="w-full grid   bg-neutral-950 py-8 px-4">
-      {sceduled.map((data,i) => (
+    <div className="w-full grid   bg-neutral-950  px-4 pt-2 pb-8">
+      {sceduled.map((data, i) => (
         <div
           key={i}
-          className={` h-5 flex items-start pl-2 space-x-2 
+          className={`h-12 flex items-start  pl-2 space-x-2 group 
       `}
         >
           <span
@@ -27,16 +36,23 @@ export default function Scedule({ sceduled }) {
           </span>
 
           {/* scheduled event goes here */}
-          <span
-            className={` 
-        text-xs h-full  line-clamp-1 w-full outline-0 ${
-          colorMap[data.color]
-        } focus:${data.color} hover:${
-              data.color
-            }  px-2 transition-all duration-300 font-extralight`}
+          <div
+            className={`flex
+        text-xs h-full ${data.id ? "" : "border-b border-t border-neutral-950"}  line-clamp-1 w-full ${
+              colorMap[data.color]
+            }  p-2 transition-all duration-300 font-extralight`}
           >
-            {data.title}
-          </span>
+            {data.title}{" "}
+            {data.id && (
+              <button
+                onClick={() => handleDelete(data.id)}
+                className="text-xs ms-auto text-neutral-900/0  group-hover:text-neutral-900 cursor-pointer transition-all duration-300"
+              >
+                {" "}
+                <Trash2 className="w-4 h-4" />{" "}
+              </button>
+            )}
+          </div>
         </div>
       ))}
     </div>

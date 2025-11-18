@@ -34,6 +34,7 @@ export default function TaskInput() {
     endTime: getNextHour(),
     color: "orange",
     allDay: false,
+    daily: false,
   });
 
   useEffect(() => {
@@ -53,10 +54,10 @@ export default function TaskInput() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!task.title || !task.start || !task.end) return;
-    const res = axiosClient.post("/api/schedule", task);
+    const res = await axiosClient.post("/api/schedule", task);
     console.log(res.data);
     setTask({
       title: "",
@@ -66,13 +67,14 @@ export default function TaskInput() {
       endTime: getNextHour(),
       color: "orange",
       allDay: false,
+      daily: false,
     });
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-neutral-900 px-4 py-8 w-full mb-4 h-full rounded-lg"
+      className="flex flex-col gap-3 bg-neutral-900 px-4 py-8 w-full mb-4 h-full rounded-lg z-10"
     >
       {/* Title */}
       <label className="text-sm text-gray-300">Title</label>
@@ -98,6 +100,7 @@ export default function TaskInput() {
       {/* Date Picker */}
       <label className="text-sm text-gray-300">Date</label>
       <input
+        disabled={task.daily}
         type="date"
         name="date"
         value={task.date}
@@ -109,47 +112,61 @@ export default function TaskInput() {
       <div className="flex gap-3">
         <div className="flex flex-col flex-1">
           <label className="text-sm text-gray-300">Start</label>
-             <select
-      name="startTime"
-      value={task.startTime}
-      onChange={handleChange}
-      className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
-    >
-      {timeOptions.map((time) => (
-        <option key={time} value={time}>
-          {time}
-        </option>
-      ))}
-    </select>
+          <select
+            name="startTime"
+            value={task.startTime}
+            onChange={handleChange}
+            className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+          >
+            {timeOptions.map((time) => (
+              <option key={time} value={time}>
+                {time}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col flex-1">
           <label className="text-sm text-gray-300">End</label>
-           <select
-      name="endTime"
-      value={task.endTime}
-      onChange={handleChange}
-      className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
-    >
-      {timeOptions.map((time) => (
-        <option key={time} value={time}>
-          {time}
-        </option>
-      ))}
-    </select>
+          <select
+            name="endTime"
+            value={task.endTime}
+            onChange={handleChange}
+            className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+          >
+            {timeOptions.map((time) => (
+              <option key={time} value={time}>
+                {time}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
       {/* All Day Toggle */}
       <div className="flex items-center gap-2 mt-2">
-        <input
-          type="checkbox"
-          name="allDay"
-          checked={task.allDay}
-          onChange={handleChange}
-          className="accent-orange-500 cursor-pointer"
-        />
-        <label className="text-sm text-gray-300">All Day</label>
+        <div className="flex items-center gap-2">
+          {" "}
+          <input
+            type="checkbox"
+            name="allDay"
+            checked={task.allDay}
+            onChange={handleChange}
+            className="accent-orange-500 cursor-pointer"
+          />
+          <label className="text-sm text-gray-300">All Day</label>
+        </div>
+
+        <div className="flex items-center gap-2 ml-4">
+          <input
+            type="checkbox"
+            name="daily"
+            checked={task.daily}
+            onChange={handleChange}
+            className="accent-orange-500 cursor-pointer"
+          />
+          <label className="text-sm text-gray-300">Repeat Everyday</label>
+        </div>
       </div>
 
       {/* Color */}

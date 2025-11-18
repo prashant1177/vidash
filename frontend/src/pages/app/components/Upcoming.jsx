@@ -19,20 +19,13 @@ export default function Upcoming({
 }) {
   const [selected, setSelected] = useState(null);
   return (
-    <div className=" border border-neutral-900 rounded-xl p-6 shadow-lg relative">
+    <div className="bg-neutral-950  border border-neutral-900 rounded-xl p-6 shadow-lg relative col-span-2 ">
       <h2 className="text-lg  font-light mb-4 flex items-center gap-2 uppercase">
         Upcoming Events
       </h2>
       {userScheduled?.length > 0 ?
         userScheduled
-          ?.filter((data) => {
-            const now = new Date();
-            const [hour, minute] = data.startTime.split(":").map(Number);
-            const taskTime = new Date();
-            taskTime.setHours(hour, minute, 0, 0);
-            return taskTime > now; // only keep future times
-          })
-          .slice(0, 3)
+          ?.slice(0, 3)
           ?.map((data, i) => (
             <div
               key={i}

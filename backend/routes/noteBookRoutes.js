@@ -9,16 +9,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const userId = req.user.id;
-    const {
-      date,
-      title,
-      description,
-      startTime,
-      endTime,
-      allDay = false,
-      color = "orange",
-      daily = false,
-    } = req.body;
+    const { text } = req.body;
     const token = req.cookies.access_token;
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -28,18 +19,11 @@ router.post("/", async (req, res) => {
       }
     );
     const { data, error } = await supabase
-      .from("Schedule")
+      .from("NoteBook")
       .insert([
         {
-          date,
-          title,
-          description,
-          startTime,
-          endTime,
-          allDay,
-          color,
+            text,
           user: userId,
-          daily,
         },
       ])
       .select();
@@ -53,11 +37,10 @@ router.post("/", async (req, res) => {
 });
 
 // GET schedules by user ID
-router.get("/:date", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { date } = req.params;
     const token = req.cookies.access_token;
+    const userId = req.user.id;
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_KEY,
@@ -66,11 +49,13 @@ router.get("/:date", async (req, res) => {
       }
     );
     const { data, error } = await supabase
-      .from("Schedule")
+      .from("NoteBook")
       .select("*")
-      .eq("user", userId)
-      .or(`date.eq.${date},daily.eq.true`)
-      .order("startTime", { ascending: true });
+      .eq("user", userId);
+
+    if (!data.length) {
+      return res.status(404).json({ error: "No notes found for this user" });
+    }
     if (error) throw error;
     res.json(data);
   } catch (err) {
@@ -82,30 +67,9 @@ router.get("/:date", async (req, res) => {
 // UPDATE schedule
 router.put("/", async (req, res) => {
   try {
-    const { id, updates } = req.body;
-
-    const { data, error } = await supabase
-      .from("Schedule")
-      .update(updates)
-      .eq("id", id)
-      .select();
-
-    if (error) throw error;
-    if (!data.length)
-      return res.status(404).json({ error: "Schedule not found" });
-
-    res.json(data[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to update schedule" });
-  }
-});
-
-// DELETE schedule
-router.delete("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
+    const { text } = req.body;
     const token = req.cookies.access_token;
+    const userId = req.user.id;
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_KEY,
@@ -114,13 +78,20 @@ router.delete("/:id", async (req, res) => {
       }
     );
 
-    const { error } = await supabase.from("Schedule").delete().eq("id", id);
+    console.log("Updating notebook for user:", userId, "with text:", text);
+
+    const { data, error } = await supabase
+      .from("NoteBook")
+      .update({ text })
+      .eq("user", userId)
+      .select();
+
     if (error) throw error;
 
-    res.json({ message: "Schedule deleted successfully" });
+    res.json(data[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to delete schedule" });
+    res.status(500).json({ error: "Failed to update schedule" });
   }
 });
 

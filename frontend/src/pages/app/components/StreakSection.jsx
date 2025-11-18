@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 export default function StreakSection() {
   const [workStreak, setWorkStreak] = useState(12);
   return (
-    <div className=" border border-neutral-900  rounded-xl p-6 shadow-lg">
+    <div className=" rounded-xl p-6 shadow-lg">
             <h2 className="text-lg font-light mb-4 flex items-center gap-2">
               WORK STREAK
             </h2>
             <div className="text-center">
-              <div className="text-5xl font-light text-orange-500 mb-2">
+              <div className="text-4xl font-light text-orange-500 mb-2">
                 {workStreak}
               </div>
               <div className="text-sm text-gray-400 font-extralight">

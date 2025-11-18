@@ -1,44 +1,39 @@
 import React, { useEffect, useState } from "react";
 import Scedule from "./Scedule";
 import TaskInput from "./TaskInput";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
-export default function Calender({ setShowScedule,onAdd,changeDate,date,sceduled }) {
+export default function Calender({
+  setShowScedule,
+  onAdd,
+  changeDate,
+  date,
+  sceduled,
+  setSceduled,
+}) {
   const formatDate = (d) => d.toISOString().split("T")[0];
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center  z-30 backdrop-blur-sm bg-black/10">
-      <div className="grid grid-cols-3  h-[600px] w-5xl rounded-2xl overflow-hidden bg-neutral-950 border-2 border-neutral-900">
-        <div className="col-span-1">
-          <TaskInput onAdd={onAdd} />
-        </div>
-        <div className="col-span-2 overflow-y-scroll">
-          <div className="flex justify-between items-center px-6 mt-4">
+    <div className="w-full flex flex-col items-center justify-center ">
+      <div className="sticky top-0 w-full py-2 bg-neutral-950 border-b border-neutral-900">
+        <div className="flex justify-between items-center px-6 ">
+          <div className="flex gap-4">
             <button
               onClick={() => changeDate(-1)}
-              className=" px-4 py-2 rounded-lg font-light text-sm flex items-center gap-2 text-neutral-700"
+              className=" text-neutral-600"
             >
-              <ChevronLeft size={16} strokeWidth={1} /> Previous
+              <ChevronLeft size={24} strokeWidth={1} />
+            </button>
+            <button onClick={() => changeDate(1)} className=" text-neutral-600">
+              <ChevronRight size={24} strokeWidth={1} />
             </button>
             <h1 className="font-light  text-center text-neutral-400">
               {formatDate(date)}
             </h1>
-            <button
-              onClick={() => changeDate(1)}
-              className=" px-4 py-2 rounded-lg font-light  text-sm flex items-center gap-2 text-neutral-800"
-            >
-              Next
-              <ChevronRight size={16} strokeWidth={1} />
-            </button>
           </div>
-          <Scedule sceduled={sceduled} />
+          <button className="font-light  bg-orange-500 px-3 py-1 cursor-pointer rounded " >Add Task</button>
         </div>
       </div>
-      <button
-        onClick={() => setShowScedule(false)}
-        className="bg-orange-500 px-4 py-2 rounded-lg font-light hover:bg-[#00D4BC] transition-all mt-4"
-      >
-        Close Scedule
-      </button>
+      <Scedule sceduled={sceduled} setSceduled={setSceduled} />
     </div>
   );
 }

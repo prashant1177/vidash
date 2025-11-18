@@ -16,6 +16,7 @@ import {
   RefreshCw,
   History,
   Calendar,
+  X,
 } from "lucide-react";
 import TimerSection from "./components/TimerSection";
 import StreakSection from "./components/StreakSection";
@@ -26,7 +27,13 @@ import Calender from "./components/Calender";
 import Upcoming from "./components/Upcoming";
 import axiosClient from "../../api/api";
 import TaskInput from "./components/TaskInput";
-
+import BookmarkSection from "./components/BookmarkSection";
+import QuoteSection from "./components/DailyQuote";
+import Sidebar from "../../Components/Sidebar";
+function toMinutes(t) {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+}
 const WorkHorseDashboard = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [lateMessage, setLateMessage] = useState("");
@@ -37,12 +44,15 @@ const WorkHorseDashboard = () => {
   const [sceduled, setSceduled] = useState([]);
   const [date, setDate] = useState(new Date());
   const [showAddEvent, setShowAddEvent] = useState(false);
+  const [nextTask, setNextTask] = useState({});
   const formatDate = (d) => d.toISOString().split("T")[0];
+  const [activeTab, setActiveTab] = useState("");
   const changeDate = (days) => {
     const newDate = new Date(date);
     newDate.setDate(date.getDate() + days);
     setDate(newDate);
   };
+
 
   useEffect(() => {
     // Fetch scheduled tasks for the selected date from backend here
@@ -51,89 +61,66 @@ const WorkHorseDashboard = () => {
     async function fetchSceduled() {
       const res = await axiosClient.get(`/api/schedule/${formatDate(date)}`); // Fetch from backend
       const data = res.data;
-      onAdd(data);
-      setUserScheduled(data);
+
+      const scheduleData = data.map((item) => ({
+        ...item,
+        startMin: toMinutes(item.startTime),
+        endMin: toMinutes(item.endTime),
+      }));
+      onAdd(scheduleData);
+      const nextTasks = data.filter((data) => {
+        const now = new Date();
+        const [hour, minute] = data.endTime.split(":").map(Number);
+        const taskTime = new Date();
+        taskTime.setHours(hour, minute, 0, 0);
+        return taskTime > now; // only keep future times
+      });
+
+      setUserScheduled(nextTasks);
+      if (nextTasks.length > 0) setNextTask(nextTasks[0]);
     }
   }, [date]);
 
-  const onAdd = (data) => {
+  const onAdd = (events) => {
     let j = 0;
-    console.log(
-      "Scheduling data processing: //add to to allow the user to edit and delete data",
-      data
-    );
-    const timeColorText = Array.from({ length: 24 * 4 }, (_, i) => {
+
+    const timeColorText = Array.from({ length: 96 }, (_, i) => {
       const hour = Math.floor(i / 4);
       const minute = (i % 4) * 15;
-      if (data && j < data.length) {
-        console.log(
-          data[j].startTime.slice(0, 5),
-          `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
-        );
-        if (
-          data[j].startTime.slice(0, 5) ==
-          `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
-        ) {
+      const slotMin = hour * 60 + minute;
+      const formatted = `${String(hour).padStart(2, "0")}:${String(
+        minute
+      ).padStart(2, "0")}`;
+
+      if (j < events.length) {
+        const evt = events[j];
+
+        if (slotMin === evt.startMin) {
           return {
-            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-              2,
-              "0"
-            )}`,
-            color: data[j].color,
-            title: data[j].title,
-          };
-        } else if (
-          data[j].startTime.slice(0, 5) <
-            `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-              2,
-              "0"
-            )}` &&
-          data[j].endTime.slice(0, 5) >
-            `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-              2,
-              "0"
-            )}`
-        ) {
-          return {
-            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-              2,
-              "0"
-            )}`,
-            color: data[j].color,
-            title: "",
-          };
-        } else if (
-          data[j].endTime.slice(0, 5) ==
-          `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
-        ) {
-          return {
-            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-              2,
-              "0"
-            )}`,
-            color: data[j++].color,
-            title: "",
-          };
-        } else {
-          return {
-            time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-              2,
-              "0"
-            )}`,
-            color: "neutral",
-            title: "",
+            id: evt.id,
+            time: formatted,
+            color: evt.color,
+            title: evt.title,
           };
         }
-      } else {
-        return {
-          time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-            2,
-            "0"
-          )}`,
-          color: "neutral",
-          title: "",
-        };
+
+        if (slotMin > evt.startMin && slotMin < evt.endMin) {
+          return { id: evt.id, time: formatted, color: evt.color, title: "" };
+        }
+
+        if (slotMin === evt.endMin) {
+          const result = {
+            id: evt.id,
+            time: formatted,
+            color: evt.color,
+            title: "",
+          };
+          j++; // move to next event
+          return result;
+        }
       }
+
+      return { time: formatted, color: "neutral", title: "" };
     });
 
     setSceduled(timeColorText);
@@ -158,9 +145,44 @@ const WorkHorseDashboard = () => {
     setShowAddEvent(!showAddEvent);
   };
   return (
-    <div className="min-h-screen bg-black text-white font-sans px-6">
-      {/* Scedule */}
-      {showScedule ? (
+    <div className="min-h-screen bg-black text-white flex ">
+     
+      {showAddEvent ? (
+        <div className="fixed  top-0 flex items-center justify-center w-full h-screen backdrop-blur-xs bg-black/90 z-10">
+          <div className="w-full max-w-xl flex justify-center items-center flex-col">
+            <TaskInput />
+            <button
+              onClick={handleAddEvent}
+               className="bg-neutral-900  p-3 hover:p-4  rounded-full font-light text-neutral-700 hover:text-neutral-500 transition-all duration-300 cursor-pointer mt-4"
+      >
+        <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+        
+      ) : null}
+
+      <Sidebar setActiveTab={setActiveTab} activeTab={activeTab}/>
+      {/* Main Dashboard      <div className="flex justify-between items-center px-6 sticky top-0 backdrop-blur-lg w-full py-3 shadow-2xl">
+        <h1 className="text-sm font-light uppercase tracking-wider">Vidash</h1>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2  font-extralight">
+            <Clock className="w-4 h-4 text-orange-500" />
+            <span className="text-sm">{currentTime.toLocaleTimeString()}</span>
+          </div>
+          <button
+            onClick={handleOpenSchedule}
+            className="flex items-center gap-2 cursor-pointer  font-extralight"
+          >
+            <Calendar className="w-4 h-4 text-orange-500" />
+            <span className="text-sm">{currentTime.toLocaleDateString()}</span>
+          </button>
+          <div className="w-6 h-6 text-sm rounded-full bg-orange-500 flex items-center justify-center text-white font-light">
+            {user ? user.name?.[0]?.toUpperCase() : "NA"}
+          </div>
+        </div>
+      </div>*/} {/* Scedule */}
+      {activeTab == "calender"? (
         <Calender
           onAdd={onAdd}
           changeDate={changeDate}
@@ -169,71 +191,38 @@ const WorkHorseDashboard = () => {
           date={date}
           setShowScedule={setShowScedule}
         />
-      ) : null}
-      {showAddEvent ? (
-        <div className="fixed  top-0 flex items-center justify-center w-full h-screen backdrop-blur-sm bg-black/10">
-          <div className="w-full max-w-xl flex justify-center items-center flex-col">
-            <TaskInput />
-            <button onClick={handleAddEvent} className="bg-orange-500 px-4 py-2 rounded-lg font-light hover:bg-[#00D4BC] transition-all mt-2 w-fit">
-              Close
-            </button>
-          </div>
-        </div>
-      ) : null}
-      <div className="flex justify-between items-center px-6 sticky top-0 backdrop-blur-lg w-full py-4 rounded-xl shadow-2xl">
-        <h1 className="text-xl font-light uppercase tracking-wider">Vidash</h1>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-orange-500" />
-            <span className="text-lg font-medium">
-              {currentTime.toLocaleTimeString()}
-            </span>
-          </div>
-          <button onClick={handleOpenSchedule} className="flex items-center gap-2 cursor-pointer">
-            <Calendar className="w-5 h-5 text-orange-500" />
-            <span className="text-lg">{currentTime.toLocaleDateString()}</span>
-          </button>
-          <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-light">
-            {user ? user.name?.[0]?.toUpperCase() : "NA"}
-          </div>
-        </div>
-      </div>
-      {/* Main Dashboard */}
-      <div className="bg-neutral-950 rounded-xl p-8 mb-6 shadow-2xl">
-        {/* Header */}
+      ) : 
+      <div className="grid grid-cols-4 h-screen gap-4 p-4 ">
 
-        {/* Late Message */}
-        {lateMessage && (
-          <div className="bg-orange-500 text-[#1E1F3A] px-4 py-2 rounded-lg text-center font-medium">
-            {lateMessage}
-          </div>
-        )}
+  {/* LEFT SIDE (big 3-column area) */}
+  <div className="grid col-span-3 grid-rows-2 gap-4 h-full">
 
-        {/* Streak and Personality Section Inside Dashboard */}
-        <div className="grid grid-cols-3 gap-8 mt-8">
-          {/* Streak Section 
-          <SelectRole />*/}
-          <Upcoming
-            userScheduled={userScheduled}
-            handleOpenSchedule={handleOpenSchedule}
-            handleAddEvent={handleAddEvent}
-          />
-          {/* Timer Section */}
-          <TimerSection />
-          {/* Streak Section */}
-          <StreakSection />
-        </div>
-      </div>
-      {/* Middle Section */}
-      <div className="grid grid-cols-5 gap-6 mb-6">
-        {/* Scratch Book */}
-        <NoteBook />
-        {/* To-Do List */}
-        <ToDoList />
-      </div>
+    {/* TOP ROW: 3 equal sections */}
+    <div className="grid grid-cols-3 gap-4 h-full ">
+      <Upcoming
+        userScheduled={userScheduled}
+        handleOpenSchedule={handleOpenSchedule}
+        handleAddEvent={handleAddEvent}
+      />
+      <BookmarkSection />
+    </div>
 
-      {/* Footer */}
-      <DailyQuote />
+    {/* BOTTOM ROW: 3 equal sections */}
+    <div className="grid grid-cols-3 gap-4 h-full">
+      <TimerSection nextTask={nextTask} currentTime={currentTime} />
+      <NoteBook />
+      <div className="bg-transparent"></div>
+    </div>
+
+  </div>
+
+  {/* RIGHT SIDE (3 equal rows) */}
+    <ToDoList />
+
+</div>}
+
+      {/* Footer
+      <DailyQuote /> */}
 
       {/* Leave Modal */}
       {showLeaveModal && (

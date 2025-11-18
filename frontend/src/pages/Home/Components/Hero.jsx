@@ -1,12 +1,5 @@
 import React from "react";
-import moon from "../../../../public/moon.jpg";
 import { Link } from "react-router-dom";
-// import homeImage from "../../../../public/homeImage.jpg";
-import homeImage from "../../../../public/homeImage.png";
-import homeImage1 from "../../../../public/homeImage1.png";
-import homeImage2 from "../../../../public/homeImage2.png";
-import homeImage4 from "../../../../public/homeImage4.png";
-import homeImage3 from "../../../../public/homeImage3.png";
 
 export default function Hero() {
   return (
