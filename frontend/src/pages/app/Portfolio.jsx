@@ -1,227 +1,495 @@
-import React, { useState } from 'react';
-import { Github, Linkedin, Mail, ExternalLink, Code2, Palette, Database, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home, Calendar, CheckSquare, Bookmark, Clock, Zap, Shield, Users, ArrowRight, Menu, X, Check, Star, Play } from 'lucide-react';
 
 export default function Portfolio() {
-  const [hoveredProject, setHoveredProject] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
-  const techStack = [
-    { name: 'React', icon: Code2, color: 'bg-blue-500' },
-    { name: 'TypeScript', icon: Code2, color: 'bg-blue-600' },
-    { name: 'Tailwind CSS', icon: Palette, color: 'bg-cyan-500' },
-    { name: 'Node.js', icon: Zap, color: 'bg-green-500' },
-    { name: 'PostgreSQL', icon: Database, color: 'bg-indigo-500' },
-    { name: 'Next.js', icon: Code2, color: 'bg-slate-800' }
-  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const projects = [
+  const features = [
     {
-      id: 1,
-      title: 'E-Commerce Platform',
-      description: 'Full-stack shopping platform with real-time inventory management',
-      tech: ['React', 'Node.js', 'PostgreSQL'],
-      color: 'from-purple-500 to-pink-500',
-      size: 'large'
+      icon: CheckSquare,
+      title: 'Smart Task Management',
+      description: 'Organize your daily goals with an intuitive interface that helps you stay focused and productive.'
     },
     {
-      id: 2,
-      title: 'Task Manager Pro',
-      description: 'Collaborative task management with team workflows',
-      tech: ['Next.js', 'TypeScript'],
-      color: 'from-blue-500 to-cyan-500',
-      size: 'medium'
+      icon: Clock,
+      title: 'Built-in Focus Timer',
+      description: 'Track your time with our elegant Pomodoro-style timer designed to maximize your concentration.'
     },
     {
-      id: 3,
-      title: 'Analytics Dashboard',
-      description: 'Real-time data visualization and reporting suite',
-      tech: ['React', 'D3.js', 'Tailwind'],
-      color: 'from-orange-500 to-red-500',
-      size: 'medium'
+      icon: Calendar,
+      title: 'Event Scheduling',
+      description: 'Never miss important deadlines with our streamlined event management system.'
     },
     {
-      id: 4,
-      title: 'Weather App',
-      description: 'Beautiful weather forecasting with location-based alerts',
-      tech: ['React', 'API Integration'],
-      color: 'from-teal-500 to-green-500',
-      size: 'small'
+      icon: Bookmark,
+      title: 'Quick Bookmarks',
+      description: 'Access your most-used tools and websites instantly from your personalized dashboard.'
     },
     {
-      id: 5,
-      title: 'Social Feed',
-      description: 'Dynamic content feed with infinite scroll and reactions',
-      tech: ['Next.js', 'Node.js'],
-      color: 'from-indigo-500 to-purple-500',
-      size: 'small'
+      icon: Zap,
+      title: 'Lightning Fast',
+      description: 'Built with modern technology for instant load times and seamless performance.'
+    },
+    {
+      icon: Shield,
+      title: 'Privacy First',
+      description: 'Your data stays with you. No tracking, no ads, just pure productivity.'
     }
   ];
 
+  const testimonials = [
+    {
+      name: 'Sarah Chen',
+      role: 'Software Engineer',
+      company: 'TechCorp',
+      content: 'V-DASH transformed how I organize my work. The focus timer alone has doubled my productivity.',
+      rating: 5
+    },
+    {
+      name: 'Marcus Rodriguez',
+      role: 'Product Designer',
+      company: 'DesignLab',
+      content: 'Finally, a dashboard that doesn\'t overwhelm me. Clean, simple, and exactly what I needed.',
+      rating: 5
+    },
+    {
+      name: 'Emily Thompson',
+      role: 'Freelance Writer',
+      company: 'Independent',
+      content: 'I\'ve tried dozens of productivity apps. V-DASH is the only one I actually use every single day.',
+      rating: 5
+    }
+  ];
+
+  const pricingPlans = [
+    {
+      name: 'Free',
+      price: '0',
+      description: 'Perfect for individuals getting started',
+      features: [
+        'Unlimited tasks & goals',
+        'Focus timer',
+        '10 bookmarks',
+        'Event scheduling',
+        'Basic analytics'
+      ],
+      cta: 'Get Started',
+      popular: false
+    },
+    {
+      name: 'Pro',
+      price: '9',
+      description: 'For power users who want more',
+      features: [
+        'Everything in Free',
+        'Unlimited bookmarks',
+        'Advanced analytics',
+        'Custom themes',
+        'Priority support',
+        'Cloud sync'
+      ],
+      cta: 'Start Free Trial',
+      popular: true
+    },
+    {
+      name: 'Team',
+      price: '29',
+      description: 'Built for teams and organizations',
+      features: [
+        'Everything in Pro',
+        'Up to 10 team members',
+        'Shared dashboards',
+        'Team analytics',
+        'Admin controls',
+        'Dedicated support'
+      ],
+      cta: 'Contact Sales',
+      popular: false
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="bg-black text-white min-h-screen">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-lg border-b border-zinc-800' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center font-bold text-xl">
+                V
+              </div>
+              <span className="text-xl font-bold">V-DASH</span>
+            </div>
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center gap-8">
+              <a href="#features" className="text-zinc-400 hover:text-white transition-colors">Features</a>
+              <a href="#testimonials" className="text-zinc-400 hover:text-white transition-colors">Testimonials</a>
+              <a href="#pricing" className="text-zinc-400 hover:text-white transition-colors">Pricing</a>
+              <button className="px-6 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors font-medium">
+                Get Started
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 space-y-4">
+              <a href="#features" className="block text-zinc-400 hover:text-white transition-colors">Features</a>
+              <a href="#testimonials" className="block text-zinc-400 hover:text-white transition-colors">Testimonials</a>
+              <a href="#pricing" className="block text-zinc-400 hover:text-white transition-colors">Pricing</a>
+              <button className="w-full px-6 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors font-medium">
+                Get Started
+              </button>
+            </div>
+          )}
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20"></div>
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        </div>
-        
-        <div className="relative z-10 max-w-4xl text-center">
-          <div className="mb-6 inline-block">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center text-4xl font-bold transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-              JD
-            </div>
-          </div>
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            John Developer
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Full-stack developer crafting elegant solutions for complex problems. 
-            Turning coffee into code since 2019.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <a href="#projects" className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105">
-              View Work
-            </a>
-            <a href="#contact" className="px-8 py-4 border-2 border-slate-600 rounded-lg font-semibold hover:border-purple-500 hover:bg-slate-900 transition-all duration-300">
-              Get in Touch
-            </a>
-          </div>
-          <div className="flex gap-6 justify-center mt-12">
-            <a href="#" className="text-slate-400 hover:text-white transition-colors"><Github size={24} /></a>
-            <a href="#" className="text-slate-400 hover:text-white transition-colors"><Linkedin size={24} /></a>
-            <a href="#" className="text-slate-400 hover:text-white transition-colors"><Mail size={24} /></a>
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack */}
-      <section className="py-24 px-6 bg-slate-900/50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4">Tech Stack</h2>
-          <p className="text-slate-400 text-center mb-16 max-w-2xl mx-auto">
-            Technologies I work with to build modern, scalable applications
-          </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {techStack.map((tech, idx) => (
-              <div
-                key={idx}
-                className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-purple-500 transition-all duration-300 hover:transform hover:scale-105 group"
-              >
-                <div className={`${tech.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300`}>
-                  <tech.icon className="text-white" size={24} />
-                </div>
-                <h3 className="font-semibold text-slate-200">{tech.name}</h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Projects */}
-      <section id="projects" className="py-24 px-6">
+      <section className="pt-32 pb-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4">Featured Projects</h2>
-          <p className="text-slate-400 text-center mb-16 max-w-2xl mx-auto">
-            A selection of recent work that showcases my approach to problem-solving
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-            {projects.map((project) => (
-              <div
-                key={project.id}
-                className={`
-                  ${project.size === 'large' ? 'md:col-span-2 lg:row-span-2' : ''}
-                  ${project.size === 'medium' ? 'lg:col-span-1' : ''}
-                  bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8 
-                  hover:border-purple-500 transition-all duration-300 group cursor-pointer
-                  relative overflow-hidden
-                `}
-                onMouseEnter={() => setHoveredProject(project.id)}
-                onMouseLeave={() => setHoveredProject(null)}
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
-                
-                <div className="relative z-10 h-full flex flex-col">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${project.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <Code2 size={24} />
-                    </div>
-                    <ExternalLink 
-                      className={`text-slate-400 group-hover:text-white transition-all duration-300 ${hoveredProject === project.id ? 'translate-x-1 -translate-y-1' : ''}`} 
-                      size={20} 
-                    />
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="text-slate-400 mb-6 flex-grow">
-                    {project.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((t, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-slate-700/50 border border-slate-600 rounded-full text-sm text-slate-300 group-hover:border-purple-500/50 transition-colors duration-300"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className=" inline-block mb-4 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-500 text-sm font-medium">
+                 Your Personal Productivity Hub
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Focus on what
+                <span className="text-orange-500"> matters</span>
+              </h1>
+              <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
+                V-DASH is the minimalist dashboard that helps you organize tasks, track time, and achieve your goals without the clutter.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="px-8 py-4 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors font-medium text-lg flex items-center justify-center gap-2 group">
+                  Start Free Today
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 rounded-lg transition-colors font-medium text-lg flex items-center justify-center gap-2">
+                  <Play size={20} />
+                  Watch Demo
+                </button>
+              </div>
+              <div className="mt-8 flex items-center gap-8 text-sm text-zinc-500">
+                <div className="flex items-center gap-2">
+                  <Check size={16} className="text-orange-500" />
+                  No credit card required
                 </div>
+                <div className="flex items-center gap-2">
+                  <Check size={16} className="text-orange-500" />
+                  Free forever plan
+                </div>
+              </div>
+            </div>
+
+            {/* Dashboard Preview */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-orange-500/20 blur-3xl rounded-full"></div>
+              <div className="relative bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div className="space-y-3">
+                  <div className="h-12 bg-zinc-900 rounded-lg animate-pulse"></div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="h-32 bg-zinc-900 rounded-lg animate-pulse"></div>
+                    <div className="h-32 bg-zinc-900 rounded-lg animate-pulse"></div>
+                  </div>
+                  <div className="h-24 bg-orange-500/10 border border-orange-500/20 rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 px-6 border-y border-zinc-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-orange-500 mb-2">10K+</div>
+              <div className="text-zinc-400">Active Users</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-orange-500 mb-2">50K+</div>
+              <div className="text-zinc-400">Tasks Completed</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-orange-500 mb-2">4.9</div>
+              <div className="text-zinc-400">User Rating</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-orange-500 mb-2">99%</div>
+              <div className="text-zinc-400">Uptime</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Everything you need to
+              <span className="text-orange-500"> stay productive</span>
+            </h2>
+            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+              Powerful features wrapped in a beautiful, intuitive interface
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className="bg-zinc-950 border border-zinc-800 rounded-xl p-8 hover:border-orange-500/50 transition-all duration-300 group"
+              >
+                <div className="w-14 h-14 bg-orange-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors">
+                  <feature.icon size={28} className="text-orange-500 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                <p className="text-zinc-400 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section id="contact" className="py-24 px-6 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-3xl p-12 md:p-16 hover:border-purple-500/50 transition-all duration-300">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Let's Build Something Amazing
+      {/* How It Works */}
+      <section className="py-24 px-6 bg-zinc-950">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Get started in
+              <span className="text-orange-500"> three simple steps</span>
             </h2>
-            <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
-              Got a project in mind? I'm always open to discussing new opportunities, 
-              creative ideas, or partnerships.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <a 
-                href="mailto:john@example.com" 
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 inline-flex items-center justify-center gap-2"
-              >
-                <Mail size={20} />
-                Send Email
-              </a>
-              <a 
-                href="#" 
-                className="px-8 py-4 border-2 border-slate-600 rounded-lg font-semibold hover:border-purple-500 hover:bg-slate-900 transition-all duration-300 inline-flex items-center justify-center gap-2"
-              >
-                <Linkedin size={20} />
-                Connect on LinkedIn
-              </a>
-            </div>
-            
-            <p className="text-slate-500 text-sm">
-              Based in San Francisco, CA • Available for remote work worldwide
-            </p>
           </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                1
+              </div>
+              <h3 className="text-2xl font-semibold mb-3">Create Account</h3>
+              <p className="text-zinc-400">Sign up in seconds with your email or social account</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                2
+              </div>
+              <h3 className="text-2xl font-semibold mb-3">Setup Dashboard</h3>
+              <p className="text-zinc-400">Customize your workspace with the tools you need</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                3
+              </div>
+              <h3 className="text-2xl font-semibold mb-3">Start Working</h3>
+              <p className="text-zinc-400">Begin your productive journey with V-DASH</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Loved by
+              <span className="text-orange-500"> productive people</span>
+            </h2>
+            <p className="text-xl text-zinc-400">See what our users have to say</p>
+          </div>
+
+          <div className="relative">
+            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-8 md:p-12">
+              <div className="flex mb-4">
+                {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
+                  <Star key={i} size={20} className="text-orange-500 fill-orange-500" />
+                ))}
+              </div>
+              <p className="text-xl md:text-2xl mb-8 leading-relaxed text-zinc-300">
+                "{testimonials[activeTestimonial].content}"
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold text-lg">
+                  {testimonials[activeTestimonial].name.charAt(0)}
+                </div>
+                <div>
+                  <div className="font-semibold">{testimonials[activeTestimonial].name}</div>
+                  <div className="text-sm text-zinc-400">
+                    {testimonials[activeTestimonial].role} at {testimonials[activeTestimonial].company}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center gap-2 mt-6">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTestimonial(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === activeTestimonial ? 'bg-orange-500 w-8' : 'bg-zinc-700'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-24 px-6 bg-zinc-950">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Simple,
+              <span className="text-orange-500"> transparent pricing</span>
+            </h2>
+            <p className="text-xl text-zinc-400">Choose the plan that works for you</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {pricingPlans.map((plan, index) => (
+              <div 
+                key={index}
+                className={`bg-black border rounded-xl p-8 ${
+                  plan.popular 
+                    ? 'border-orange-500 relative' 
+                    : 'border-zinc-800'
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-orange-500 rounded-full text-sm font-medium">
+                    Most Popular
+                  </div>
+                )}
+                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                <p className="text-zinc-400 mb-6">{plan.description}</p>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold">${plan.price}</span>
+                  <span className="text-zinc-400">/month</span>
+                </div>
+                <button className={`w-full py-3 rounded-lg font-medium transition-colors mb-6 ${
+                  plan.popular
+                    ? 'bg-orange-500 hover:bg-orange-600'
+                    : 'bg-zinc-900 hover:bg-zinc-800'
+                }`}>
+                  {plan.cta}
+                </button>
+                <ul className="space-y-3">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <Check size={20} className="text-orange-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-zinc-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            Ready to boost your
+            <span className="text-orange-500"> productivity?</span>
+          </h2>
+          <p className="text-xl text-zinc-400 mb-8">
+            Join thousands of productive people using V-DASH today
+          </p>
+          <button className="px-8 py-4 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors font-medium text-lg inline-flex items-center gap-2 group">
+            Get Started for Free
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+          <p className="text-sm text-zinc-500 mt-4">No credit card required • Free forever plan available</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-slate-800">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">© 2025 John Developer. Built with React & Tailwind.</p>
-          <div className="flex gap-6">
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm">GitHub</a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm">LinkedIn</a>
-            <a href="#" className="text-slate-500 hover:text-white transition-colors text-sm">Twitter</a>
+      <footer className="border-t border-zinc-900 py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center font-bold">
+                  V
+                </div>
+                <span className="text-lg font-bold">V-DASH</span>
+              </div>
+              <p className="text-zinc-400 text-sm">
+                The minimalist productivity dashboard built for focus.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Product</h4>
+              <ul className="space-y-2 text-sm text-zinc-400">
+                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Roadmap</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Changelog</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm text-zinc-400">
+                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-zinc-400">
+                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
+            <p>© 2024 V-DASH. All rights reserved.</p>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-white transition-colors">Twitter</a>
+              <a href="#" className="hover:text-white transition-colors">GitHub</a>
+              <a href="#" className="hover:text-white transition-colors">Discord</a>
+            </div>
           </div>
         </div>
       </footer>

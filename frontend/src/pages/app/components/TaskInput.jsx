@@ -74,7 +74,7 @@ export default function TaskInput() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-neutral-900 px-4 py-8 w-full mb-4 h-full rounded-lg z-10"
+      className="flex flex-col gap-3 bg-gradient-to-r from-neutral-950 to-neutral-900 border border-neutral-800/50 px-4 py-8 w-full mb-4 h-full rounded-lg z-10"
     >
       {/* Title */}
       <label className="text-sm text-gray-300">Title</label>

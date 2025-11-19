@@ -1,7 +1,5 @@
-const dotenv = require("dotenv");
-const { createClient } = require("@supabase/supabase-js");
-
 const express = require("express");
+const supabase = require("../supabaseClient");
 
 const router = express.Router();
 
@@ -11,23 +9,16 @@ router.post("/", async (req, res) => {
     const userId = req.user.id;
     const { text } = req.body;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
     const { data, error } = await supabase
       .from("TODO")
       .insert([
         {
           text,
-          completed: false,
           user: userId,
         },
       ])
-      .select();
+      .select()
+      .setHeader("Authorization", `Bearer ${token}`);
     if (error) throw error;
     res.status(201).json(data[0]);
   } catch (err) {
@@ -41,21 +32,19 @@ router.get("/", async (req, res) => {
   try {
     const userId = req.user.id;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
     const { data, error } = await supabase
       .from("TODO")
       .select("*")
       .eq("user", userId)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: true })
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (error) throw error;
-    console.log("Fetched TODOs for user:", userId, data);
+    data.forEach((element) => {
+      element.completed =
+        element.lastDoneDate === new Date().toISOString().slice(0, 10);
+    });
+
     res.json(data);
   } catch (err) {
     console.error(err);
@@ -69,19 +58,16 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { completed } = req.body;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
+    const lastDoneDate = completed
+      ? new Date().toISOString().slice(0, 10)
+      : null;
 
     const { data, error } = await supabase
       .from("TODO")
-      .update({ completed })
+      .update({ lastDoneDate })
       .eq("id", id)
-      .select();
+      .select()
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (error) throw error;
     if (!data.length) return res.status(404).json({ error: "Task not found" });
@@ -98,14 +84,11 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
-    const { error } = await supabase.from("TODO").delete().eq("id", id);
+    const { error } = await supabase
+      .from("TODO")
+      .delete()
+      .eq("id", id)
+      .setHeader("Authorization", `Bearer ${token}`);
     if (error) throw error;
 
     res.json({ message: "Task deleted successfully" });

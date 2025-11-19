@@ -1,19 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Scedule from "./Scedule";
 import TaskInput from "./TaskInput";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import useStore from "../../../Store";
 
-export default function Calender({
-  setShowScedule,
-  onAdd,
-  changeDate,
-  date,
-  sceduled,
-  setSceduled,
-}) {
-  const formatDate = (d) => d.toISOString().split("T")[0];
+export default function Calender({handleAddEvent}) {
+  const date = useStore((s) => s.date);
+  const changeDate = useStore((s) => s.changeDate);
+  const formatDate = (d) => d.toISOString().split("T")[0];const containerRef = useRef(null);
+
+  useEffect(() => {
+    const now = new Date();
+    const hour = now.getHours(); // 0–23
+    const percent = hour / 32;
+
+    const box = containerRef.current;
+    if (box) {
+      box.scrollTo({
+        top: box.scrollHeight * percent,
+        behavior: "smooth"
+      });
+    }
+  }, []);
+
   return (
-    <div className="w-full flex flex-col items-center justify-center ">
+    <div 
+      ref={containerRef} className="w-full  h-screen overflow-y-auto flex flex-col items-center justify-center ">
       <div className="sticky top-0 w-full py-2 bg-neutral-950 border-b border-neutral-900">
         <div className="flex justify-between items-center px-6 ">
           <div className="flex gap-4">
@@ -30,10 +42,10 @@ export default function Calender({
               {formatDate(date)}
             </h1>
           </div>
-          <button className="font-light  bg-orange-500 px-3 py-1 cursor-pointer rounded " >Add Task</button>
+          <button onClick={handleAddEvent} className="font-light  bg-orange-500 px-3 py-1 cursor-pointer rounded " >Add Task</button>
         </div>
       </div>
-      <Scedule sceduled={sceduled} setSceduled={setSceduled} />
+      <Scedule />
     </div>
   );
 }

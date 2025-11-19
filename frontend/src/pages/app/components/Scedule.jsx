@@ -1,7 +1,9 @@
 import { Trash2 } from "lucide-react";
 import axiosClient from "../../../api/api";
+import useStore from "../../../Store";
+import { useEffect, useRef } from "react";
 
-export default function Scedule({ sceduled, setSceduled }) {
+export default function Scedule() {
   const colorMap = {
     red: "bg-red-500",
     orange: "bg-orange-500",
@@ -12,13 +14,14 @@ export default function Scedule({ sceduled, setSceduled }) {
     neutral: "bg-neutral-900",
   };
 
-  const handleDelete = async (id) => {
-    await axiosClient.delete(`/api/schedule/${id}`);
-    // Optionally, you might want to refresh the schedule list here after deletion
-    setSceduled(sceduled.filter((scedule) => scedule.id !== id));
-  };
+ 
+  const sceduled = useStore((s) => s.sceduled);
+
+  const deleteSchedule = useStore((s) => s.deleteSchedule);
+
+
   return (
-    <div className="w-full grid   bg-neutral-950  px-4 pt-2 pb-8">
+    <div  className="w-full grid   bg-neutral-950  px-4 pt-2 pb-8">
       {sceduled.map((data, i) => (
         <div
           key={i}
@@ -45,7 +48,7 @@ export default function Scedule({ sceduled, setSceduled }) {
             {data.title}{" "}
             {data.id && (
               <button
-                onClick={() => handleDelete(data.id)}
+                onClick={() => deleteSchedule(data.id)}
                 className="text-xs ms-auto text-neutral-900/0  group-hover:text-neutral-900 cursor-pointer transition-all duration-300"
               >
                 {" "}

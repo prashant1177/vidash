@@ -1,7 +1,6 @@
-const dotenv = require("dotenv");
-const { createClient } = require("@supabase/supabase-js");
 
 const express = require("express");
+const supabase = require("../supabaseClient");
 
 const router = express.Router();
 
@@ -11,22 +10,16 @@ router.post("/", async (req, res) => {
     const userId = req.user.id;
     const { text } = req.body;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
     const { data, error } = await supabase
       .from("NoteBook")
       .insert([
         {
-            text,
+          text,
           user: userId,
         },
       ])
-      .select();
+      .select()
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (error) throw error;
     res.status(201).json(data[0]);
@@ -41,17 +34,11 @@ router.get("/", async (req, res) => {
   try {
     const token = req.cookies.access_token;
     const userId = req.user.id;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
     const { data, error } = await supabase
       .from("NoteBook")
       .select("*")
-      .eq("user", userId);
+      .eq("user", userId)
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (!data.length) {
       return res.status(404).json({ error: "No notes found for this user" });
@@ -70,21 +57,12 @@ router.put("/", async (req, res) => {
     const { text } = req.body;
     const token = req.cookies.access_token;
     const userId = req.user.id;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
-
-    console.log("Updating notebook for user:", userId, "with text:", text);
-
     const { data, error } = await supabase
       .from("NoteBook")
       .update({ text })
       .eq("user", userId)
-      .select();
+      .select()
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (error) throw error;
 

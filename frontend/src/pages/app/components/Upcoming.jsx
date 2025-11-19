@@ -1,68 +1,43 @@
-import { Code2, BarChart3, Users2 } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
+import useStore from "../../../Store";
+import { Plus } from "lucide-react";
 
-const roles = [
-  {
-    name: "Cold Emailing",
-  },
-  {
-    name: "Youtube",
-  },
-  {
-    name: "Marketing",
-  },
-];
-export default function Upcoming({
-  userScheduled,
-  handleOpenSchedule,
-  handleAddEvent,
-}) {
-  const [selected, setSelected] = useState(null);
+export default function Upcoming({ handleAddEvent }) {
+  const userScheduled = useStore((s) => s.userScheduled);
+
   return (
-    <div className="bg-neutral-950  border border-neutral-900 rounded-xl p-6 shadow-lg relative col-span-2 ">
-      <h2 className="text-lg  font-light mb-4 flex items-center gap-2 uppercase">
-        Upcoming Events
-      </h2>
-      {userScheduled?.length > 0 ?
-        userScheduled
-          ?.slice(0, 3)
-          ?.map((data, i) => (
-            <div
-              key={i}
-              onClick={() => setSelected(data.title)}
-              className={` flex justify-between mt-4 cursor-pointer border-b border-neutral-800 rounded-2xl p-4  bg-neutral-900  transition-all duration-300 shadow-lg hover:border-orange-500
-                }`}
-            >
-              <div className="flex items-center text-center gap-4">
-                <h2 className="text-sm font-extralight uppercase ">
-                  {data.title}
-                </h2>
-              </div>
-              <div>
-                <span className="text-xs text-neutral-400 italic">
-                  at {data.startTime.slice(0, 5)}
-                </span>
-              </div>
-            </div>
-          )) : (
-          <p className=" font-extralight italic text-neutral-500 ">
-            No upcoming events
+    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-semibold">Upcoming Events</h3>
+          <p className="text-xs text-zinc-500 mt-1">
+            List your daily tasks here
           </p>
-      )}
-      <div className="flex items-center justify-between bottom-4 absolute w-full left-0 right-0 px-4">
+        </div>
         <button
           onClick={handleAddEvent}
-          className="cursor-pointer mt-6 w-full bg-neutral-950 px-4 py-2 rounded-lg font-light hover:bg-neutral-900 transition-all"
+          className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
         >
-          ADD EVENT
-        </button>{" "}
-        <button
-          onClick={handleOpenSchedule}
-          className="cursor-pointer mt-6 w-full bg-neutral-950 px-4 py-2 rounded-lg font-light hover:bg-neutral-900 transition-all"
-        >
-          FULL SCHEDULE
+          <Plus size={18} className="text-orange-500" />
         </button>
       </div>
+
+      {userScheduled?.length > 0 ? (
+        <div className="space-y-2">
+          {userScheduled.slice(0, 3).map((data, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between p-3 bg-zinc-900 rounded-lg group"
+            >
+              <h3 className="text-sm">{data.title}</h3>
+
+              <span className="text-xs ">at {data.startTime.slice(0, 5)}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-zinc-600 italic text-sm py-4">No upcoming events</p>
+      )}
     </div>
   );
 }

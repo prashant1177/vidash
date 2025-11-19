@@ -1,115 +1,80 @@
 import { CheckSquare, Plus, Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import axiosClient from "../../../api/api";
+import React, { useEffect } from "react";
+import useStore from "../../../Store";
 
 export default function ToDoList() {
-  const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
+  const {
+    todos,
+    newTodo,
+    setNewTodo,
+    fetchTodos,
+    addTodo,
+    toggleTodo,
+    deleteTodo,
+  } = useStore();
 
   useEffect(() => {
-    // Fetch initial todos from backend or local storage
-    const fetchTodos = async () => {
-      // Placeholder for fetching todos
-      const res = await axiosClient.get("/api/todo");
-      setTodos(res.data);
-    };
     fetchTodos();
-  }, []);
-  const addTodo = async () => {
-    if (newTodo.trim()) {
-      const res = await axiosClient.post("/api/todo", { text: newTodo });
-      setTodos([...todos, res.data]);
-      setNewTodo("");
-    }
-  };
-
-  const toggleTodo = async (id, currcompleted) => {
-    await axiosClient.put(`/api/todo/${id}`, { completed: !currcompleted });
-
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !currcompleted } : todo
-      )
-    );
-  };
-
-  const deleteTodo = async (id) => {
-    await axiosClient.delete(`/api/todo/${id}`);
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
-
-  const completedPercent =
-    todos.length > 0
-      ? (todos.filter((t) => t.completed).length / todos.length) * 100
-      : 0;
+  }, [fetchTodos]);
 
   return (
-    <div className="h-screen relative border-2 border-neutral-950 rounded-xl p-6 shadow-xl">
-      <div className="flex items-center gap-2 mb-4">
-        <CheckSquare className="w-6 h-6 text-orange-500" />
-        <h2 className="text-xl font-light">TO-DO LIST</h2>
-      </div>
+            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+      {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold">Daily Goals</h3>
+                  <p className="text-xs text-zinc-500 mt-1">Track your progress</p>
+                </div>
+              </div>
 
       {/* Add Task */}
-      <div className="flex gap-2 mb-4">
+         <div className="mb-3">
+                <div className="flex gap-2">
         <input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && addTodo()}
-          placeholder="Add new task..."
-          className="font-extralight flex-1 bg-neutral-950 text-[#F2F4F8] px-4 py-2 rounded-lg border border-[#3A3C5A] focus:border-orange-500 focus:outline-none"
+          placeholder="Add a new task..."
+                    className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
         />
         <button
           onClick={addTodo}
-          className="bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-600 transition-all"
+                    className="p-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors"
         >
-          <Plus className="w-6 h-6" />
+          <Plus size={18} />
         </button>
-      </div>
+
+                </div>
+              </div>
 
       {/* Task List */}
-      <div className="space-y-2 mb-4 max-h-80 overflow-y-auto">
+              <div className="space-y-2">
         {todos.map((todo) => (
           <div
             key={todo.id}
-            className={`bg-neutral-950 text-white p-3 rounded-lg flex items-center justify-between group ${
-              todo.completed ? "opacity-50" : ""
-            }`}
+             className="flex items-center gap-3 p-3 bg-zinc-900 rounded-lg group"
           >
-            <div className="flex items-center gap-3 flex-1">
               <input
                 type="checkbox"
                 checked={todo.completed}
                 onChange={() => toggleTodo(todo.id, todo.completed)}
-                className="w-5 h-5 accent-orange-500 cursor-pointer font-extralight"
+                      className="w-4 h-4 accent-orange-500 cursor-pointer"
               />
-              <span className={todo.completed ? "line-through" : ""}>
+              <span
+              className={`flex-1 text-sm ${todo.completed ? 'line-through text-zinc-500' : ''}`}
+              >
                 {todo.text}
               </span>
-            </div>
+
             <button
               onClick={() => deleteTodo(todo.id)}
-              className="opacity-0 group-hover:opacity-100 text-red-600 hover:text-red-700 transition-opacity"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 size={14} className="text-red-500" />
             </button>
           </div>
         ))}
-      </div>
-
-      {/* Progress Bar */}
-      <div className="mt-4 bottom-0 absolute w-full left-0 px-6 pb-6">
-        <div className="w-full h-2 bg-neutral-700 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-orange-500 transition-all duration-300"
-            style={{ width: `${completedPercent}%` }}
-          />
-        </div>
-        <div className="flex justify-between text-sm mt-2 text-neutral-500 font-extralight">
-          <span>Task Completion</span>
-          <span>{Math.round(completedPercent)}%</span>
-        </div>
       </div>
     </div>
   );

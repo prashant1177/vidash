@@ -1,7 +1,6 @@
-const dotenv = require("dotenv");
-const { createClient } = require("@supabase/supabase-js");
 
 const express = require("express");
+const supabase = require("../supabaseClient");
 
 const router = express.Router();
 
@@ -20,13 +19,7 @@ router.post("/", async (req, res) => {
       daily = false,
     } = req.body;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
+    
     const { data, error } = await supabase
       .from("Schedule")
       .insert([
@@ -42,7 +35,8 @@ router.post("/", async (req, res) => {
           daily,
         },
       ])
-      .select();
+      .select()
+      .setHeader("Authorization", `Bearer ${token}`);;
 
     if (error) throw error;
     res.status(201).json(data[0]);
@@ -58,19 +52,13 @@ router.get("/:date", async (req, res) => {
     const userId = req.user.id;
     const { date } = req.params;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
     const { data, error } = await supabase
       .from("Schedule")
       .select("*")
       .eq("user", userId)
       .or(`date.eq.${date},daily.eq.true`)
-      .order("startTime", { ascending: true });
+      .order("startTime", { ascending: true })
+      .setHeader("Authorization", `Bearer ${token}`);;
     if (error) throw error;
     res.json(data);
   } catch (err) {
@@ -88,7 +76,8 @@ router.put("/", async (req, res) => {
       .from("Schedule")
       .update(updates)
       .eq("id", id)
-      .select();
+      .select()
+      .setHeader("Authorization", `Bearer ${token}`);;
 
     if (error) throw error;
     if (!data.length)
@@ -106,15 +95,9 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const token = req.cookies.access_token;
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-      }
-    );
 
-    const { error } = await supabase.from("Schedule").delete().eq("id", id);
+    const { error } = await supabase.from("Schedule").delete().eq("id", id)
+      .setHeader("Authorization", `Bearer ${token}`);;
     if (error) throw error;
 
     res.json({ message: "Schedule deleted successfully" });

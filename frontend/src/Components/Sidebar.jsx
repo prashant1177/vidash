@@ -10,10 +10,10 @@ export default function Sidebar({activeTab, setActiveTab }) {
   ];
 
   return (
-    <div className="bg-neutral-950 border-r border-neutral-900 h-screen w-64 flex flex-col shadow-lg sticky top-0 flex-1">
+    <div className="bg-neutral-950 border-r border-neutral-900 h-screen w-64 flex flex-col shadow-lg sticky top-0">
       {/* Header */}
       <div className="p-6 border-b border-neutral-900">
-        <h1 className="text-2xl font-light text-orange-500">Dashboard</h1>
+        <h1 className="text-xl font-semibold text-orange-500 uppercase">V-DASH</h1>
       </div>
 
       {/* Navigation Items */}

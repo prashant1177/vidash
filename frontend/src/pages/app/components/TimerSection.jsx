@@ -53,7 +53,9 @@ export default function TimerSection({ nextTask, currentTime }) {
     setWorkSeconds(elapsed);
     setRemainingSeconds(remaining);
     setCurrTask(nextTask.title || "Current Event");
-    setCurrTaskTiming(`${nextTask.startTime?.slice(0, 5)} - ${nextTask.endTime?.slice(0, 5)}`)
+    setCurrTaskTiming(
+      `${nextTask.startTime?.slice(0, 5)} - ${nextTask.endTime?.slice(0, 5)}`
+    );
   }, [nextTask, currentTime]);
 
   const formatTime = (seconds) => {
@@ -73,39 +75,39 @@ export default function TimerSection({ nextTask, currentTime }) {
       : 0;
 
   return (
-    <div className="bg-neutral-950  border border-neutral-900 rounded-xl p-6 shadow-lg flex flex-col items-center  justify-center h-full">
-      <div className="relative mb-4 z-0">
-        <svg className="w-48 h-48 transform -rotate-90">
-          <circle
-            cx="96"
-            cy="96"
-            r="88"
-            stroke="#000"
-            strokeWidth="8"
-            fill="none"
-          />
-          <circle
-            cx="96"
-            cy="96"
-            r="88"
-            stroke="#f97316"
-            strokeWidth="8"
-            fill="none"
-            strokeDasharray={`${2 * Math.PI * 88}`}
-            strokeDashoffset={`${
-              2 * Math.PI * 88 * (1 - progressPercent / 100)
-            }`}
-            className="transition-all duration-300"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
+    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+      <h3 className="text-lg font-semibold mb-6">Work Timer</h3>
+
+      <div className="flex flex-col items-center">
+        <div className="relative w-48 h-48 flex items-center justify-center mb-6">
+          <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+            <circle
+              cx="96"
+              cy="96"
+              r="88"
+                      stroke="#27272a"
+              strokeWidth="8"
+              fill="none"
+            />
+            <circle
+              cx="96"
+              cy="96"
+              r="88"
+                      stroke="#f97316"
+              strokeWidth="8"
+              fill="none"
+              strokeDasharray={`${2 * Math.PI * 88}`}
+              strokeDashoffset={`${
+                2 * Math.PI * 88 * (1 - progressPercent / 100)
+              }`}
+              className="transition-all duration-1000"
+            />
+          </svg>
           <div className="text-center">
-            <div className="text-4xl font-light text-orange-500 mb-1">
+            <div className="text-4xl font-bold font-mono text-orange-500">
               {formatTime(remainingSeconds)}
             </div>
-            <div className="text-sm text-white font-light opacity-70">
-              remaining
-            </div>
+            <div className="text-xs text-zinc-500 mt-1"> remaining</div>
           </div>
         </div>
       </div>
@@ -113,9 +115,7 @@ export default function TimerSection({ nextTask, currentTime }) {
       {/* Task Info */}
       {nextTask && (
         <div className="text-center">
-          <div className="text-lg font-light text-white mb-1">
-            {currTask}
-          </div>
+          <div className="text-lg font-light text-white mb-1">{currTask}</div>
           <div className="text-sm font-extralight text-gray-400">
             {currTaskTiming}
           </div>
