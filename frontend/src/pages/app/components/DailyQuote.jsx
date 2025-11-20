@@ -110,7 +110,7 @@ const QuoteSection = () => {
           </p>
         </div>
         <div className="flex items-center gap-2 ml-auto">
-          <div className="w-12 h-[2px] bg-orange-500/50"></div>
+          <div className="w-12 h-[2px] bg-sky-500/50"></div>
           <p className="text-sm text-neutral-300 font-light">
             {currentQuote.author}
           </p>

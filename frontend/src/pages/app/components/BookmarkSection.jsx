@@ -77,7 +77,7 @@ const BookmarkSection = () => {
           }}
                   className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
         >
-          <Plus size={18} className="text-orange-500"  />
+          <Plus size={18} className="text-sky-500"  />
         </button>
       </div>
 
@@ -102,7 +102,7 @@ className="text-sm"              >
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => startEdit(bookmark)}
-className="hover:text-orange-500"                >
+className="hover:text-sky-500"                >
                   <Edit2 size={14} />
                 </button>
 
@@ -132,7 +132,7 @@ className="hover:text-red-500"                >
               onChange={(e) =>
                 setNewBookmark({ ...newBookmark, title: e.target.value })
               }
-              className="w-full bg-neutral-950 text-white px-4 py-3 rounded-xl border border-neutral-800 focus:border-orange-500 focus:outline-none mb-3"
+              className="w-full bg-neutral-950 text-white px-4 py-3 rounded-xl border border-neutral-800 focus:border-sky-500 focus:outline-none mb-3"
             />
 
             <input
@@ -142,7 +142,7 @@ className="hover:text-red-500"                >
               onChange={(e) =>
                 setNewBookmark({ ...newBookmark, url: e.target.value })
               }
-              className="w-full bg-neutral-950 text-white px-4 py-3 rounded-xl border border-neutral-800 focus:border-orange-500 focus:outline-none mb-6"
+              className="w-full bg-neutral-950 text-white px-4 py-3 rounded-xl border border-neutral-800 focus:border-sky-500 focus:outline-none mb-6"
             />
 
             <div className="flex gap-3">
@@ -150,7 +150,7 @@ className="hover:text-red-500"                >
                 onClick={
                   editingBookmark ? handleUpdateBookmark : handleAddBookmark
                 }
-                className="flex-1 bg-orange-500 py-3 rounded-xl hover:bg-orange-600 font-light transition-colors"
+                className="flex-1 bg-sky-500 py-3 rounded-xl hover:bg-sky-600 font-light transition-colors"
               >
                 {editingBookmark ? "Update" : "Add"}
               </button>
@@ -161,7 +161,7 @@ className="hover:text-red-500"                >
                   setEditingBookmark(null);
                   setNewBookmark({ title: "", url: "" });
                 }}
-                className="flex-1 border border-neutral-700 py-3 rounded-xl hover:border-orange-500 hover:text-orange-500 font-light transition-colors"
+                className="flex-1 border border-neutral-700 py-3 rounded-xl hover:border-sky-500 hover:text-sky-500 font-light transition-colors"
               >
                 Cancel
               </button>

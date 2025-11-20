@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 export default function Scedule() {
   const colorMap = {
     red: "bg-red-500",
-    orange: "bg-orange-500",
+    orange: "bg-sky-500",
     blue: "bg-blue-500",
     purple: "bg-purple-500",
     pink: "bg-pink-500",

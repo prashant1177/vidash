@@ -3,7 +3,7 @@ import BookmarkSection from "./BookmarkSection";
 
 export default function BookMark() {
   return (
-    <div className="w-full">
+    <div className=" h-full w-full">
       <BookmarkSection />
     </div>
   );

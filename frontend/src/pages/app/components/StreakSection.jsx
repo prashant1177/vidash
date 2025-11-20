@@ -8,7 +8,7 @@ export default function StreakSection() {
               WORK STREAK
             </h2>
             <div className="text-center">
-              <div className="text-4xl font-light text-orange-500 mb-2">
+              <div className="text-4xl font-light text-sky-500 mb-2">
                 {workStreak}
               </div>
               <div className="text-sm text-gray-400 font-extralight">
@@ -26,7 +26,7 @@ export default function StreakSection() {
                 <div className="text-sm text-gray-400 mb-2 font-extralight">
                   Longest Streak
                 </div>
-                <div className="text-2xl font-light text-orange-500">
+                <div className="text-2xl font-light text-sky-500">
                   45 days
                 </div>
               </div>

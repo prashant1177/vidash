@@ -12,9 +12,11 @@ export default function Sidebar({activeTab, setActiveTab }) {
   return (
     <div className="bg-neutral-950 border-r border-neutral-900 h-screen w-64 flex flex-col shadow-lg sticky top-0">
       {/* Header */}
-      <div className="p-6 border-b border-neutral-900">
-        <h1 className="text-xl font-semibold text-orange-500 uppercase">V-DASH</h1>
-      </div>
+       <a href="/" className="p-6">
+              <span className="bg-gradient-to-br from-sky-500 to-sky-300 bg-clip-text text-transparent font-bold text-xl">
+  V-DASH
+</span>
+            </a>
 
       {/* Navigation Items */}
       <nav className="flex-1 p-4">
@@ -29,7 +31,7 @@ export default function Sidebar({activeTab, setActiveTab }) {
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive
-                      ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+                      ? "bg-sky-500/10 text-sky-500 border border-sky-500/20"
                       : "text-gray-400 hover:text-white hover:bg-neutral-900"
                   }`}
                 >

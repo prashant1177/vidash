@@ -42,7 +42,7 @@ export default function Calender({handleAddEvent}) {
               {formatDate(date)}
             </h1>
           </div>
-          <button onClick={handleAddEvent} className="font-light  bg-orange-500 px-3 py-1 cursor-pointer rounded " >Add Task</button>
+          <button onClick={handleAddEvent} className="font-light  bg-sky-500 px-3 py-1 cursor-pointer rounded " >Add Task</button>
         </div>
       </div>
       <Scedule />

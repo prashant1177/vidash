@@ -16,13 +16,13 @@ export default function NoteBook() {
 
 
   return (
-            <div className="col-span-2 bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+            <div className=" bg-zinc-950 border border-zinc-800 rounded-xl p-6  h-full w-full">
               <h3 className="text-lg font-semibold mb-4">Planning Notes</h3>
       <textarea
         value={scratchText}
         onChange={(e) => setScratchText(e.target.value)}
                 placeholder="Write your random thoughts here..."
-                className="w-full h-48  bg-zinc-900 border border-zinc-800 rounded-lg p-4 text-sm focus:outline-none focus:border-orange-500 resize-none"
+                className="w-full h-48  bg-zinc-900 border border-zinc-800 rounded-lg p-4 text-sm focus:outline-none focus:border-sky-500 resize-none"
        
       />
     </div>

@@ -74,7 +74,7 @@ export default function TaskInput() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 bg-gradient-to-r from-neutral-950 to-neutral-900 border border-neutral-800/50 px-4 py-8 w-full mb-4 h-full rounded-lg z-10"
+      className="flex flex-col gap-3 bg-zinc-950 border border-zinc-800/50 px-4 py-8 w-full mb-4 h-full rounded-lg z-10"
     >
       {/* Title */}
       <label className="text-sm text-gray-300">Title</label>
@@ -83,7 +83,7 @@ export default function TaskInput() {
         value={task.title}
         onChange={handleChange}
         placeholder="Task name"
-        className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+        className="p-2 bg-zinc-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
       />
 
       {/* Description */}
@@ -94,7 +94,7 @@ export default function TaskInput() {
         onChange={handleChange}
         placeholder="Add a note about this task..."
         rows={3}
-        className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none resize-none"
+        className="p-2 bg-zinc-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none resize-none"
       />
 
       {/* Date Picker */}
@@ -105,7 +105,7 @@ export default function TaskInput() {
         name="date"
         value={task.date}
         onChange={handleChange}
-        className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
+        className="p-2 bg-zinc-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
       />
 
       {/* Start & End Times */}
@@ -116,7 +116,7 @@ export default function TaskInput() {
             name="startTime"
             value={task.startTime}
             onChange={handleChange}
-            className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+            className="p-2 bg-zinc-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
           >
             {timeOptions.map((time) => (
               <option key={time} value={time}>
@@ -132,7 +132,7 @@ export default function TaskInput() {
             name="endTime"
             value={task.endTime}
             onChange={handleChange}
-            className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
+            className="p-2 bg-zinc-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none"
           >
             {timeOptions.map((time) => (
               <option key={time} value={time}>
@@ -152,7 +152,7 @@ export default function TaskInput() {
             name="allDay"
             checked={task.allDay}
             onChange={handleChange}
-            className="accent-orange-500 cursor-pointer"
+            className="accent-sky-500 cursor-pointer"
           />
           <label className="text-sm text-gray-300">All Day</label>
         </div>
@@ -163,7 +163,7 @@ export default function TaskInput() {
             name="daily"
             checked={task.daily}
             onChange={handleChange}
-            className="accent-orange-500 cursor-pointer"
+            className="accent-sky-500 cursor-pointer"
           />
           <label className="text-sm text-gray-300">Repeat Everyday</label>
         </div>
@@ -176,7 +176,7 @@ export default function TaskInput() {
           name="color"
           value={task.color}
           onChange={handleChange}
-          className="p-2 bg-neutral-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
+          className="p-2 bg-zinc-800 rounded-md text-sm focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
         >
           <option value="orange">Default</option>
           <option value="green">Green</option>
@@ -189,7 +189,7 @@ export default function TaskInput() {
       {/* Submit */}
       <button
         type="submit"
-        className="mt-4 bg-orange-500/80 hover:bg-orange-500 text-sm py-2 rounded-md transition-colors"
+        className="mt-4 bg-sky-500/80 hover:bg-sky-500 text-sm py-2 rounded-md transition-colors"
       >
         Add Task
       </button>

@@ -18,7 +18,7 @@ export default function ToDoList() {
   }, [fetchTodos]);
 
   return (
-            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6  h-full w-full">
       {/* Header */}
         <div className="flex items-center justify-between mb-4">
                 <div>
@@ -36,11 +36,11 @@ export default function ToDoList() {
           onChange={(e) => setNewTodo(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && addTodo()}
           placeholder="Add a new task..."
-                    className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-500"
+                    className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-500"
         />
         <button
           onClick={addTodo}
-                    className="p-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors"
+                    className="p-2 bg-sky-500 hover:bg-sky-600 rounded-lg transition-colors"
         >
           <Plus size={18} />
         </button>
@@ -59,7 +59,7 @@ export default function ToDoList() {
                 type="checkbox"
                 checked={todo.completed}
                 onChange={() => toggleTodo(todo.id, todo.completed)}
-                      className="w-4 h-4 accent-orange-500 cursor-pointer"
+                      className="w-4 h-4 accent-sky-500 cursor-pointer"
               />
               <span
               className={`flex-1 text-sm ${todo.completed ? 'line-through text-zinc-500' : ''}`}

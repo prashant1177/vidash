@@ -104,7 +104,7 @@ export default function TimerSection({ nextTask, currentTime }) {
             />
           </svg>
           <div className="text-center">
-            <div className="text-4xl font-bold font-mono text-orange-500">
+            <div className="text-4xl font-bold font-mono text-sky-500">
               {formatTime(remainingSeconds)}
             </div>
             <div className="text-xs text-zinc-500 mt-1"> remaining</div>

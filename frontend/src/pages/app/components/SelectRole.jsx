@@ -4,15 +4,15 @@ import React, { useState } from 'react'
 const roles = [
   {
     name: "Development",
-    icon: <Code2 className="w-8 h-8 text-orange-500" />,
+    icon: <Code2 className="w-8 h-8 text-sky-500" />,
   },
   {
     name: "Marketing",
-    icon: <BarChart3 className="w-8 h-8 text-orange-500" />,
+    icon: <BarChart3 className="w-8 h-8 text-sky-500" />,
   },
   {
     name: "Management",
-    icon: <Users2 className="w-8 h-8 text-orange-500" />,
+    icon: <Users2 className="w-8 h-8 text-sky-500" />,
   },
 ];
 export default function SelectRole({}) {
@@ -26,8 +26,8 @@ export default function SelectRole({}) {
               <div
                 key={index}
                 onClick={() => setSelected(role.name)}
-                className={`mt-4 cursor-pointer border border-neutral-800 rounded-2xl p-4  bg-neutral-950 hover:bg-orange-500/10 transition-all duration-300 shadow-lg ${
-                  selected === role.name ? "border-orange-500 " : ""
+                className={`mt-4 cursor-pointer border border-neutral-800 rounded-2xl p-4  bg-neutral-950 hover:bg-sky-500/10 transition-all duration-300 shadow-lg ${
+                  selected === role.name ? "border-sky-500 " : ""
                 }`}
               >
                 <div className="flex items-center text-center gap-4">

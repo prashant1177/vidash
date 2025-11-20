@@ -1,5 +1,6 @@
 const express = require("express");
 const supabase = require("../supabaseClient");
+const verifyUser = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -51,12 +52,12 @@ router.post("/signin", async (req, res) => {
 router.post("/refresh", async (req, res) => {
   try {
     const refresh_token = req.cookies.refresh_token;
-    
+
     if (!refresh_token) {
       return res.status(401).json({ error: "No refresh token" });
     }
-    const { data, error } = await supabase.auth.refreshSession({ 
-      refresh_token 
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token,
     });
 
     if (error) {
@@ -88,11 +89,10 @@ router.post("/refresh", async (req, res) => {
       });
     }
 
-    res.json({ 
+    res.json({
       message: "Session refreshed",
-      user: data.session.user 
+      user: data.session.user,
     });
-
   } catch (err) {
     console.error("Refresh token error:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -123,6 +123,19 @@ router.post("/signout", async (req, res) => {
 
     // Step 4: Respond success
     res.status(200).json({ message: "Signed out successfully." });
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong during signout." });
+  }
+});
+
+router.get("/",verifyUser ,  async (req, res) => {
+  try {
+    // Step 1: get the token from cookies (optional if you're tracking user sessions)
+    const token = req.cookies?.access_token;
+    
+    if (token) return res.status(200).json({ message: "User Is Logged In" });
+
+    return res.status(401).json({ error: error.message });
   } catch (err) {
     res.status(500).json({ error: "Something went wrong during signout." });
   }

@@ -4,9 +4,14 @@ import { createCalendarSlice } from "./slices/useCalendarSlice";
 import { createScheduleSlice } from "./slices/useScheduleSlice";
 import { createNotebookSlice } from "./slices/useNotebookSlice";
 
-const createUserSlice = (set) => ({
+const createUserSlice = (set, get) => ({
   user: null,
   setUser: (u) => set({ user: u }),
+
+  fetchUser: async () => {
+    const res = await axiosClient.get("/api/auth");
+    set({ user: res.status === 200 ? true : null });
+  },
 });
 
 const createTodoSlice = (set, get) => ({
@@ -49,11 +54,10 @@ const createTodoSlice = (set, get) => ({
       todos: s.todos.filter((todo) => todo.id !== id),
     }));
   },
-
 });
 
 const useStore = create((set, get) => ({
-  ...createUserSlice(set),
+  ...createUserSlice(set, get),
   ...createTodoSlice(set, get),
   ...createCalendarSlice(set, get),
   ...createScheduleSlice(set, get),
