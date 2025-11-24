@@ -101,9 +101,9 @@ export default function Home() {
 
   const testimonials = [
     {
-      name: "Sarah Chen",
-      role: "Software Engineer",
-      company: "TechCorp",
+      name: "Prasant Patil",
+      role: "Founder",
+      company: "LaTeXWriter & V-Dash",
       content:
         "V-DASH transformed how I organize my work. The focus timer alone has doubled my productivity.",
       rating: 5,
@@ -139,7 +139,7 @@ export default function Home() {
         "Basic analytics",
       ],
       cta: "Get Started",
-      popular: false,
+      popular: true,
     },
     {
       name: "Pro",
@@ -153,8 +153,8 @@ export default function Home() {
         "Priority support",
         "Cloud sync",
       ],
-      cta: "Start Free Trial",
-      popular: true,
+      cta: "Coming Soon",
+      popular: false,
     },
     {
       name: "Team",
@@ -168,7 +168,7 @@ export default function Home() {
         "Admin controls",
         "Dedicated support",
       ],
-      cta: "Contact Sales",
+      cta: "Coming Soon",
       popular: false,
     },
   ];

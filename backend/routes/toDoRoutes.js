@@ -15,6 +15,7 @@ router.post("/", async (req, res) => {
         {
           text,
           user: userId,
+          doneCount: 0,
         },
       ])
       .select()
@@ -61,10 +62,19 @@ router.put("/:id", async (req, res) => {
     const lastDoneDate = completed
       ? new Date().toISOString().slice(0, 10)
       : null;
+    const count = completed ? 1 : -1;
 
+    const { data: row } = await supabase
+      .from("TODO")
+      .select("doneCount")
+      .eq("id", id)
+      .single()
+      .setHeader("Authorization", `Bearer ${token}`);
+
+    const newCount = row.doneCount + count;
     const { data, error } = await supabase
       .from("TODO")
-      .update({ lastDoneDate })
+      .update({ lastDoneDate, doneCount: newCount })
       .eq("id", id)
       .select()
       .setHeader("Authorization", `Bearer ${token}`);

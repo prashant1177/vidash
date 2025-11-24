@@ -1,129 +1,81 @@
-import React, { useState } from "react";
-import { Bookmark, Plus, ExternalLink, Edit2, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
+import useStore from "../../../Store";
 
 const BookmarkSection = () => {
-  const [bookmarks, setBookmarks] = useState([
-    { id: 1, title: "GitHub", url: "https://github.com" },
-    { id: 2, title: "Stack Overflow", url: "https://stackoverflow.com" },
-    { id: 3, title: "YouTube", url: "https://youtube.com" },
-    { id: 4, title: "Gmail", url: "https://gmail.com" },
-  ]);
+  const { fetchBookmarks, bookmarks, handleAddBookmark, handleDeleteBookmark } =
+    useStore();
 
   const [showAddBookmark, setShowAddBookmark] = useState(false);
-  const [editingBookmark, setEditingBookmark] = useState(null);
   const [newBookmark, setNewBookmark] = useState({ title: "", url: "" });
 
-  const handleAddBookmark = () => {
-    if (newBookmark.title && newBookmark.url) {
-      const bookmark = {
-        id: Date.now(),
-        title: newBookmark.title,
-        url: newBookmark.url.startsWith("http")
-          ? newBookmark.url
-          : `https://${newBookmark.url}`,
-      };
-      setBookmarks([...bookmarks, bookmark]);
-      setNewBookmark({ title: "", url: "" });
-      setShowAddBookmark(false);
-    }
+  const submitBookmark = async () => {
+    await handleAddBookmark(newBookmark.title, newBookmark.url);
+
+    setNewBookmark({ title: "", url: "" });
+    setShowAddBookmark(false);
   };
 
-  const handleUpdateBookmark = () => {
-    if (editingBookmark && newBookmark.title && newBookmark.url) {
-      setBookmarks(
-        bookmarks.map((b) =>
-          b.id === editingBookmark.id
-            ? {
-                ...b,
-                title: newBookmark.title,
-                url: newBookmark.url.startsWith("http")
-                  ? newBookmark.url
-                  : `https://${newBookmark.url}`,
-              }
-            : b
-        )
-      );
-      setNewBookmark({ title: "", url: "" });
-      setEditingBookmark(null);
-      setShowAddBookmark(false);
-    }
-  };
-
-  const handleDeleteBookmark = (id) => {
-    setBookmarks(bookmarks.filter((b) => b.id !== id));
-  };
-
-  const startEdit = (bookmark) => {
-    setEditingBookmark(bookmark);
-    setNewBookmark({ title: bookmark.title, url: bookmark.url });
-    setShowAddBookmark(true);
-  };
-
+  useEffect(() => {
+    fetchBookmarks();
+  }, []);
   return (
-            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
+    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6 h-full">
       {/* Header */}
-
       <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold">Bookmarks</h3>
-                  <p className="text-xs text-zinc-500 mt-1">Quick access links</p>
-                </div>
-       
+        <div>
+          <h3 className="text-lg font-semibold">Bookmarks</h3>
+          <p className="text-xs text-zinc-500 mt-1">Quick access links</p>
+        </div>
+
         <button
           onClick={() => {
-            setEditingBookmark(null);
             setNewBookmark({ title: "", url: "" });
             setShowAddBookmark(true);
           }}
-                  className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+          className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
         >
-          <Plus size={18} className="text-sky-500"  />
+          <Plus size={18} className="text-sky-500" />
         </button>
       </div>
 
       {/* List */}
-              <div className="space-y-2">
+      <div className="space-y-2">
         {bookmarks.length === 0 ? (
           <div className="text-center text-neutral-500 py-8 font-light">
             No bookmarks yet.
           </div>
         ) : (
           bookmarks.map((bookmark) => (
-                             <div key={bookmark.id} className="flex items-center justify-between p-3 bg-zinc-900 rounded-lg group">
-
+            <div
+              key={bookmark.id}
+              className="flex items-center justify-between p-3 bg-zinc-900 rounded-lg group"
+            >
               <a
                 href={bookmark.url}
                 target="_blank"
                 rel="noopener noreferrer"
-className="text-sm"              >
+                className="text-sm"
+              >
                 {bookmark.title}
               </a>
 
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={() => startEdit(bookmark)}
-className="hover:text-sky-500"                >
-                  <Edit2 size={14} />
-                </button>
-
-                <button
-                  onClick={() => handleDeleteBookmark(bookmark.id)}
-className="hover:text-red-500"                >
-                  <Trash2  size={14}  />
-                </button>
-              </div>
+              <button
+                onClick={() => handleDeleteBookmark(bookmark.id)}
+                className="hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           ))
         )}
       </div>
 
-      {/* Add/Edit Modal */}
+      {/* Add Modal */}
       {showAddBookmark && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-neutral-900 rounded-2xl p-6 max-w-md w-full mx-4 border border-neutral-800 shadow-xl">
-            <h3 className="text-xl font-light mb-4">
-              {editingBookmark ? "Edit Bookmark" : "Add New Bookmark"}
-            </h3>
+            <h3 className="text-xl font-light mb-4">Add New Bookmark</h3>
 
             <input
               type="text"
@@ -147,18 +99,15 @@ className="hover:text-red-500"                >
 
             <div className="flex gap-3">
               <button
-                onClick={
-                  editingBookmark ? handleUpdateBookmark : handleAddBookmark
-                }
+                onClick={submitBookmark}
                 className="flex-1 bg-sky-500 py-3 rounded-xl hover:bg-sky-600 font-light transition-colors"
               >
-                {editingBookmark ? "Update" : "Add"}
+                Add
               </button>
 
               <button
                 onClick={() => {
                   setShowAddBookmark(false);
-                  setEditingBookmark(null);
                   setNewBookmark({ title: "", url: "" });
                 }}
                 className="flex-1 border border-neutral-700 py-3 rounded-xl hover:border-sky-500 hover:text-sky-500 font-light transition-colors"

@@ -3,6 +3,7 @@ import axiosClient from "./api/api";
 import { createCalendarSlice } from "./slices/useCalendarSlice";
 import { createScheduleSlice } from "./slices/useScheduleSlice";
 import { createNotebookSlice } from "./slices/useNotebookSlice";
+import { createBookmarkSlice } from "./slices/useBookmarkSlice";
 
 const createUserSlice = (set, get) => ({
   user: null,
@@ -11,6 +12,13 @@ const createUserSlice = (set, get) => ({
   fetchUser: async () => {
     const res = await axiosClient.get("/api/auth");
     set({ user: res.status === 200 ? true : null });
+  },
+
+  logoutUser: async () => {
+    console.log("/api/auth/signout");
+    await axiosClient.post("/api/auth/signout");
+    set({ user: null });
+    window.location.href = "/";
   },
 });
 
@@ -62,6 +70,7 @@ const useStore = create((set, get) => ({
   ...createCalendarSlice(set, get),
   ...createScheduleSlice(set, get),
   ...createNotebookSlice(set, get),
+  ...createBookmarkSlice(set, get),
 }));
 
 export default useStore;

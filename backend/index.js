@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const scheduleRoutes = require("./routes/scheduleRoutes");
 const noteBookRoutes = require("./routes/noteBookRoutes");
 const toDoRoutes = require("./routes/toDoRoutes");
+const bookmarkRoutes = require("./routes/bookmarkRoutes");
 const verifyUser = require("./middleware/authMiddleware");
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/schedule", verifyUser, scheduleRoutes);
+app.use("/api/bookmark", verifyUser, bookmarkRoutes);
 app.use("/api/notebook", verifyUser, noteBookRoutes);
 app.use("/api/todo", verifyUser, toDoRoutes);
 // Simple test route

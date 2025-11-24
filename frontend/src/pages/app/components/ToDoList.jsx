@@ -66,7 +66,11 @@ export default function ToDoList() {
               >
                 {todo.text}
               </span>
-
+  <span
+              className={` text-xs text-zinc-500`}
+              >
+                {todo.doneCount}
+              </span>
             <button
               onClick={() => deleteTodo(todo.id)}
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
