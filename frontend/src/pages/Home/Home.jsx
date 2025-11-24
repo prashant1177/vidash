@@ -459,7 +459,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Section */}
+     {/*  Stats Section
       <section className="py-16 px-6 border-y border-white/5 bg-black/50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -491,7 +491,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Features Section */}
       <section id="features" className="py-32 px-6 relative">

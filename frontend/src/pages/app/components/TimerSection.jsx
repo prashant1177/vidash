@@ -87,7 +87,7 @@ export default function TimerSection() {
               cx="96"
               cy="96"
               r="88"
-              stroke="#000000"
+              stroke="#27272a"
               strokeWidth="8"
               fill="none"
             />
@@ -95,7 +95,7 @@ export default function TimerSection() {
               cx="96"
               cy="96"
               r="88"
-              stroke="#27272a"
+              stroke="#0ea5e9"
               strokeWidth="8"
               fill="none"
               strokeDasharray={`${2 * Math.PI * 88}`}
@@ -106,7 +106,7 @@ export default function TimerSection() {
             />
           </svg>
           <div className="text-center">
-            <div className="text-4xl font-bold font-mono text-zinc-500">
+            <div className="text-4xl font-bold font-mono text-sky-500">
               {formatTime(remainingSeconds)}
             </div>
             <div className="text-xs text-zinc-500 mt-1"> remaining</div>
