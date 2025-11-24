@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosClient from "../../../api/api";
+import useStore from "../../../Store";
 const timeOptions = [];
 for (let h = 0; h < 24; h++) {
   for (let m = 0; m < 60; m += 15) {
@@ -9,6 +10,9 @@ for (let h = 0; h < 24; h++) {
   }
 }
 export default function TaskInput() {
+  
+  const { addSchedule } = useStore();
+
   const getCurrentTime = () => {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");
@@ -57,8 +61,7 @@ export default function TaskInput() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!task.title || !task.start || !task.end) return;
-    const res = await axiosClient.post("/api/schedule", task);
-    console.log(res.data);
+    addSchedule(task);
     setTask({
       title: "",
       description: "",
@@ -146,7 +149,6 @@ export default function TaskInput() {
       {/* All Day Toggle */}
       <div className="flex items-center gap-2 mt-2">
         <div className="flex items-center gap-2">
-          {" "}
           <input
             type="checkbox"
             name="allDay"

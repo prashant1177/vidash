@@ -17,7 +17,7 @@ export const createScheduleSlice = (set, get) => ({
     const scheduleData = data.map((item) => ({
       ...item,
       startMin: toMinutes(item.startTime),
-      endMin: toMinutes(item.endTime)
+      endMin: toMinutes(item.endTime),
     }));
 
     get().computeNextTasks(data);
@@ -44,7 +44,7 @@ export const createScheduleSlice = (set, get) => ({
             id: evt.id,
             time: formatted,
             color: evt.color,
-            title: evt.title
+            title: evt.title,
           };
         }
 
@@ -57,7 +57,7 @@ export const createScheduleSlice = (set, get) => ({
             id: evt.id,
             time: formatted,
             color: evt.color,
-            title: ""
+            title: "",
           };
           j++;
           return block;
@@ -74,7 +74,15 @@ export const createScheduleSlice = (set, get) => ({
   async deleteSchedule(id) {
     await axiosClient.delete(`/api/schedule/${id}`);
     set({
-      sceduled: get().sceduled.filter((item) => item.id !== id)
+      sceduled: get().sceduled.filter((item) => item.id !== id),
     });
-  }
+  },
+
+  // Delete a schedule item
+  async addSchedule(task) {
+    const res = await axiosClient.post(`/api/schedule`, { task });
+    set({
+      sceduled: [...get().sceduled, res.data],
+    });
+  },
 });

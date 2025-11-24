@@ -12,7 +12,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   ];
 
   return (
-    <div className="bg-neutral-950 border-r border-neutral-900 h-screen w-64 flex flex-col shadow-lg sticky top-0">
+    <div className="bg-neutral-950 border-r border-neutral-900 h-screen w-64 flex flex-col shadow-lg fixed left-0 top-0">
       {/* Header */}
       <a href="/" className="p-6">
         <span className="bg-gradient-to-br from-sky-500 to-sky-300 bg-clip-text text-transparent font-bold text-xl">

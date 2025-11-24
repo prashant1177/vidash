@@ -1,4 +1,3 @@
-
 const express = require("express");
 const supabase = require("../supabaseClient");
 
@@ -17,9 +16,9 @@ router.post("/", async (req, res) => {
       allDay = false,
       color = "orange",
       daily = false,
-    } = req.body;
+    } = req.body.task;
     const token = req.cookies.access_token;
-    
+
     const { data, error } = await supabase
       .from("Schedule")
       .insert([
@@ -36,7 +35,7 @@ router.post("/", async (req, res) => {
         },
       ])
       .select()
-      .setHeader("Authorization", `Bearer ${token}`);;
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (error) throw error;
     res.status(201).json(data[0]);
@@ -58,7 +57,7 @@ router.get("/:date", async (req, res) => {
       .eq("user", userId)
       .or(`date.eq.${date},daily.eq.true`)
       .order("startTime", { ascending: true })
-      .setHeader("Authorization", `Bearer ${token}`);;
+      .setHeader("Authorization", `Bearer ${token}`);
     if (error) throw error;
     res.json(data);
   } catch (err) {
@@ -77,7 +76,7 @@ router.put("/", async (req, res) => {
       .update(updates)
       .eq("id", id)
       .select()
-      .setHeader("Authorization", `Bearer ${token}`);;
+      .setHeader("Authorization", `Bearer ${token}`);
 
     if (error) throw error;
     if (!data.length)
@@ -96,8 +95,11 @@ router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     const token = req.cookies.access_token;
 
-    const { error } = await supabase.from("Schedule").delete().eq("id", id)
-      .setHeader("Authorization", `Bearer ${token}`);;
+    const { error } = await supabase
+      .from("Schedule")
+      .delete()
+      .eq("id", id)
+      .setHeader("Authorization", `Bearer ${token}`);
     if (error) throw error;
 
     res.json({ message: "Schedule deleted successfully" });

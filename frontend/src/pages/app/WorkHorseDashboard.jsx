@@ -48,25 +48,25 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: "easeOut" }
+    transition: { duration: 0.4, ease: "easeOut" },
   },
 };
 
 const tabVariants = {
   hidden: { opacity: 0, x: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" },
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     x: -20,
-    transition: { duration: 0.2, ease: "easeIn" }
-  }
+    transition: { duration: 0.2, ease: "easeIn" },
+  },
 };
 
 const WorkHorseDashboard = () => {
@@ -115,94 +115,99 @@ const WorkHorseDashboard = () => {
       </AnimatePresence>
 
       <Sidebar setActiveTab={setActiveTab} activeTab={activeTab} />
-      
-      {/* Main Content Area */}
-      <AnimatePresence mode="wait">
-        {activeTab == "calender" ? (
-          <motion.div
-            key="calender"
-            variants={tabVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="flex-1 h-full overflow-hidden"
-          >
-            <Calender handleAddEvent={handleAddEvent} />
-          </motion.div>
-        ) : activeTab == "todo" ? (
-          <motion.div
-            key="todo"
-            variants={tabVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="flex-1 h-full overflow-hidden"
-          >
-            <ToDo />
-          </motion.div>
-        ) : activeTab == "bookmarks" ? (
-          <motion.div
-            key="bookmarks"
-            variants={tabVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="flex-1 h-full overflow-hidden"
-          >
-            <BookMark />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="dashboard"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="flex-1 overflow-auto"
-          >
-            <div className="p-8">
-              {/* Header */}
-              <motion.div 
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.5 }}
-                className="mb-8"
-              >
-                <h2 className="text-3xl font-bold mb-2 tracking-tight">Good evening</h2>
-                <p className="text-zinc-400">Here's your productivity overview</p>
-              </motion.div>
-              
-              {/* Dashboard Grid */}
-              <motion.div 
-                className="grid grid-cols-3 gap-6"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.div variants={itemVariants} className="h-full">
-                  <Upcoming handleAddEvent={handleAddEvent} />
+      <div className="flex-1 ml-64">
+        {/* Main Content Area */}
+        <AnimatePresence mode="wait">
+          {activeTab == "calender" ? (
+            <motion.div
+              key="calender"
+              variants={tabVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="flex-1 h-full overflow-hidden"
+            >
+              <Calender handleAddEvent={handleAddEvent} />
+            </motion.div>
+          ) : activeTab == "todo" ? (
+            <motion.div
+              key="todo"
+              variants={tabVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="flex-1 h-full overflow-hidden"
+            >
+              <ToDo />
+            </motion.div>
+          ) : activeTab == "bookmarks" ? (
+            <motion.div
+              key="bookmarks"
+              variants={tabVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="flex-1 h-full overflow-hidden"
+            >
+              <BookMark />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="dashboard"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex-1 overflow-auto"
+            >
+              <div className="p-8">
+                {/* Header */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.5 }}
+                  className="mb-8"
+                >
+                  <h2 className="text-3xl font-bold mb-2 tracking-tight">
+                    Good evening
+                  </h2>
+                  <p className="text-zinc-400">
+                    Here's your productivity overview
+                  </p>
                 </motion.div>
-                
-                <motion.div variants={itemVariants}>
-                  <BookmarkSection />
+
+                {/* Dashboard Grid */}
+                <motion.div
+                  className="grid grid-cols-3 gap-6"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <motion.div variants={itemVariants} className="h-full">
+                    <Upcoming handleAddEvent={handleAddEvent} />
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <BookmarkSection />
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <ToDoList />
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <TimerSection />
+                  </motion.div>
+
+                  <motion.div variants={itemVariants} className="col-span-2">
+                    <NoteBook />
+                  </motion.div>
                 </motion.div>
-                
-                <motion.div variants={itemVariants}>
-                  <ToDoList />
-                </motion.div>
-                
-                <motion.div variants={itemVariants}>
-                  <TimerSection />
-                </motion.div>
-                
-                <motion.div variants={itemVariants} className="col-span-2">
-                  <NoteBook />
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
