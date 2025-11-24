@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import useStore from "../../../Store";
 
-export default function TimerSection({ nextTask, currentTime }) {
+export default function TimerSection() {
+  const { nextTask, currentTime } = useStore();
   const [totalWorkSeconds, setTotalWorkSeconds] = useState(0);
   const [workSeconds, setWorkSeconds] = useState(0);
   const [remainingSeconds, setRemainingSeconds] = useState(0);
@@ -85,7 +87,7 @@ export default function TimerSection({ nextTask, currentTime }) {
               cx="96"
               cy="96"
               r="88"
-                      stroke="#27272a"
+              stroke="#000000"
               strokeWidth="8"
               fill="none"
             />
@@ -93,7 +95,7 @@ export default function TimerSection({ nextTask, currentTime }) {
               cx="96"
               cy="96"
               r="88"
-                      stroke="#f97316"
+              stroke="#27272a"
               strokeWidth="8"
               fill="none"
               strokeDasharray={`${2 * Math.PI * 88}`}
@@ -104,7 +106,7 @@ export default function TimerSection({ nextTask, currentTime }) {
             />
           </svg>
           <div className="text-center">
-            <div className="text-4xl font-bold font-mono text-sky-500">
+            <div className="text-4xl font-bold font-mono text-zinc-500">
               {formatTime(remainingSeconds)}
             </div>
             <div className="text-xs text-zinc-500 mt-1"> remaining</div>
