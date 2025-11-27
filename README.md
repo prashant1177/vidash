@@ -60,13 +60,52 @@ The frontend typically runs at `http://localhost:5173` or a similar port dependi
 ## Project Structure (High-Level)
 ```
 /backend
-  index.js
-  package.json
-  .env
+│── .env
+│── package.json
+│── package-lock.json
+│── index.js
+│── supabaseClient.js
+│
+├── /middleware
+│     └── (middleware files)
+│
+├── /routes
+      └── (route handler files)
 
 /frontend
-  src/
-  package.json
+│── package.json
+│── package-lock.json
+│── vercel.json
+│── index.html
+│── eslint.config.js
+│── .gitignore
+│── README.md
+│
+├── /public
+│     └── (static assets like favicon, images, etc.)
+│
+├── /src
+│     │── App.css
+│     │── App.jsx
+│     │── index.css
+│     │── main.jsx
+│     │── Store.js
+│     │
+│     ├── /Components
+│     │     └── (reusable UI components)
+│     │
+│     ├── /api
+│     │     └── (API service functions, axios/fetch calls)
+│     │
+│     ├── /assets
+│     │     └── (images, fonts, styles, icons)
+│     │
+│     ├── /pages
+│     │     └── (page-level components: Home, Dashboard, Login, etc.)
+│     │
+│     └── /slices
+│           └── (Redux slices or context logic)
+
 ```
 
 ---
