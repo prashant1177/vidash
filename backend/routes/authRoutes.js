@@ -56,6 +56,7 @@ router.post("/refresh", async (req, res) => {
     if (!refresh_token) {
       return res.status(401).json({ error: "No refresh token" });
     }
+
     const { data, error } = await supabase.auth.refreshSession({
       refresh_token,
     });
@@ -128,11 +129,11 @@ router.post("/signout", async (req, res) => {
   }
 });
 
-router.get("/",verifyUser ,  async (req, res) => {
+router.get("/", verifyUser, async (req, res) => {
   try {
     // Step 1: get the token from cookies (optional if you're tracking user sessions)
     const token = req.cookies?.access_token;
-    
+
     if (token) return res.status(200).json({ message: "User Is Logged In" });
 
     return res.status(401).json({ error: error.message });
