@@ -32,15 +32,17 @@ router.post("/signin", async (req, res) => {
   // Store tokens in secure cookies
   res.cookie("access_token", data.session?.access_token, {
     httpOnly: true,
-    secure: false, // 👈 no SSL
-    sameSite: "Lax", // works fine between localhost ports
+    secure: true, // 👈 no SSL
+    sameSite: "None", // ⛔ Required for cross-site cookies
+    path: "/",
     maxAge: 60 * 60 * 1000, // 1 hour
   });
 
   res.cookie("refresh_token", data.session?.refresh_token, {
     httpOnly: true,
-    secure: false, // 👈 no SSL
-    sameSite: "Lax", // works fine between localhost ports
+    secure: true, // 👈 no SSL
+    sameSite: "None", // ⛔ Required for cross-site cookies
+    path: "/",
     maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days
   });
   res.status(200).json({
@@ -75,8 +77,9 @@ router.post("/refresh", async (req, res) => {
     // Set new access token
     res.cookie("access_token", data.session.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // SSL in production
-      sameSite: "Lax",
+      secure: true, // SSL in production
+      sameSite: "None", // ⛔ Required for cross-site cookies
+      path: "/",
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
@@ -84,8 +87,9 @@ router.post("/refresh", async (req, res) => {
     if (data.session.refresh_token) {
       res.cookie("refresh_token", data.session.refresh_token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "Lax",
+        secure: true,
+        sameSite: "None", // ⛔ Required for cross-site cookies
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
     }
@@ -113,13 +117,13 @@ router.post("/signout", async (req, res) => {
     // Step 3: Remove cookies from browser
     res.clearCookie("access_token", {
       httpOnly: true,
-      secure: false, // 👈 no SSL
-      sameSite: "Lax", // works fine between localhost ports
+      secure: true, // 👈 no SSL
+      sameSite: "None", // works fine between localhost ports
     });
     res.clearCookie("refresh_token", {
       httpOnly: true,
-      secure: false, // 👈 no SSL
-      sameSite: "Lax", // works fine between localhost ports
+      secure: true, // 👈 no SSL
+      sameSite: "None", // works fine between localhost ports
     });
 
     // Step 4: Respond success
