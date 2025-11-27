@@ -1,12 +1,13 @@
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosClient from "../../api/api";
 
 export default function Login() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const navigate = useNavigate();
   const handleLogin = async () => {
     try {
       const res = await axiosClient.post(`/api/auth/signin`, {
@@ -14,9 +15,9 @@ export default function Login() {
         password,
       });
       if (res.status === 200) {
-        const {user } = res.data;
+        const { user } = res.data;
         localStorage.setItem("user", JSON.stringify(user));
-        window.location.href = "/app";
+        navigate("/app");
       }
     } catch (error) {
       console.error("Login failed:", error);
